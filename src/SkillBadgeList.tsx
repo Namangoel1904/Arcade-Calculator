@@ -65,9 +65,9 @@ function SkillBadgeList() {
         console.log('Final processed badges:', processedBadges)
         setSkillBadges(processedBadges)
         setLoading(false)
-      } catch (err) {
-        console.error('Error reading Excel file:', err)
-        setError(`Failed to load skill badges data: ${err.message}`)
+      } catch (error: unknown) {
+        console.error('Error reading Excel file:', error)
+        setError(`Failed to load skill badges data: ${error instanceof Error ? error.message : 'Unknown error'}`)
         setLoading(false)
       }
     }

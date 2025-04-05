@@ -1,10 +1,5 @@
 import React from 'react'
 
-interface Video {
-  id: string
-  title: string
-}
-
 const FEATURED_VIDEOS = [
   {
     id: '8ZxgbK6e64E',
