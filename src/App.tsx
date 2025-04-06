@@ -333,7 +333,7 @@ function PointsCalculator() {
                       <div className="bg-white rounded-lg p-4">
                         <h3 className="text-xl font-medium text-blue-900 mb-3">Your Achievements</h3>
                         <ul className="list-disc list-inside text-base text-gray-700 space-y-2">
-                          <li>Current Points: {scrapedData.points.total}</li>
+                          <li>Current Points: {scrapedData?.points?.total || 0}</li>
                           <li>Badges Earned: {recentBadges?.length || 0}</li>
                           <li>Active Since: Jan 8, 2025</li>
                         </ul>
