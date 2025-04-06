@@ -13,18 +13,45 @@ const mockBadges = [
 ];
 
 app.get('/api/calculate-points', (req, res) => {
-  const { profileUrl } = req.query;
-  
-  // Mock response
-  res.json({
-    badges: mockBadges,
-    points: {
-      total: 15,
-      gameBadges: 5,
-      triviaBadges: 5,
-      skillBadges: 5
+  try {
+    const { profileUrl } = req.query;
+    
+    if (!profileUrl) {
+      return res.status(400).json({ 
+        error: 'Profile URL is required',
+        badges: [],
+        points: {
+          total: 0,
+          gameBadges: 0,
+          triviaBadges: 0,
+          skillBadges: 0
+        }
+      });
     }
-  });
+
+    // Mock response
+    res.json({
+      badges: mockBadges,
+      points: {
+        total: 15,
+        gameBadges: 5,
+        triviaBadges: 5,
+        skillBadges: 5
+      }
+    });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({
+      error: 'Internal server error',
+      badges: [],
+      points: {
+        total: 0,
+        gameBadges: 0,
+        triviaBadges: 0,
+        skillBadges: 0
+      }
+    });
+  }
 });
 
 const PORT = process.env.PORT || 3001;

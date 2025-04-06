@@ -98,16 +98,18 @@ function PointsCalculator() {
   }
 
   // Filter badges earned after January 8th, 2025
-  const recentBadges = scrapedData?.badges.filter(badge => {
-    const earnedDate = new Date(badge.earnedDate)
-    return earnedDate.getTime() >= START_DATE.getTime()
-  })
+  const recentBadges = scrapedData?.badges?.filter(badge => {
+    if (!badge?.earnedDate) return false;
+    const earnedDate = new Date(badge.earnedDate);
+    return earnedDate.getTime() >= START_DATE.getTime();
+  }) || [];
 
   // Filter badges for milestone progress (after April 1st, 2025)
-  const milestoneBadges = scrapedData?.badges.filter(badge => {
-    const earnedDate = new Date(badge.earnedDate)
-    return earnedDate.getTime() >= MILESTONE_START_DATE.getTime()
-  })
+  const milestoneBadges = scrapedData?.badges?.filter(badge => {
+    if (!badge?.earnedDate) return false;
+    const earnedDate = new Date(badge.earnedDate);
+    return earnedDate.getTime() >= MILESTONE_START_DATE.getTime();
+  }) || [];
 
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
