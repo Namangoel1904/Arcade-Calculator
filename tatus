@@ -1,0 +1,5 @@
+[33m1b6fe31[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m feat: add backend server with Docker configuration
+[33md49bf68[m fix: update API endpoint to use environment variable
+[33mb32b36a[m describe your changes here
+[33m807f39c[m fix: update TypeScript and Vite configuration for React
+[33m40c9387[m fix: resolve TypeScript errors and improve error handling
