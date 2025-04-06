@@ -45,6 +45,8 @@ interface ScrapedData {
   points: Points
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+
 function PointsCalculator() {
   const [profileUrl, setProfileUrl] = useState('')
   const [scrapedData, setScrapedData] = useState<ScrapedData | null>(null)
@@ -74,22 +76,22 @@ function PointsCalculator() {
   }
 
   const calculatePoints = async () => {
-    setLoading(true)
-    setError('')
-    setScrapedData(null)
+    if (!profileUrl) {
+      setError('Please enter a profile URL')
+      return
+    }
 
     try {
-      const response = await axios.get('http://localhost:3001/api/calculate-points', {
-        params: { 
-          profileUrl
-        }
+      setLoading(true)
+      setError('')
+      const response = await axios.get(`${API_BASE_URL}/api/calculate-points`, {
+        params: { profileUrl }
       })
-
       setScrapedData(response.data)
       saveUrlToHistory(profileUrl) // Save URL after successful calculation
     } catch (err) {
-      setError('Failed to calculate points. Please check the URL and try again.')
-      console.error(err)
+      console.error('Error calculating points:', err)
+      setError('Failed to calculate points. Please try again.')
     } finally {
       setLoading(false)
     }
