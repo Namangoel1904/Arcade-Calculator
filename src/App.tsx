@@ -232,19 +232,19 @@ function PointsCalculator() {
                       <div className="grid grid-cols-2 gap-4 mb-6">
                         <div className="bg-gray-50 p-4 rounded-lg">
                           <p className="text-base text-gray-600">Total Points</p>
-                          <p className="text-3xl font-bold text-google-blue">{scrapedData.points.total}</p>
+                          <p className="text-3xl font-bold text-google-blue">{scrapedData?.points?.total || 0}</p>
                         </div>
                         <div className="bg-gray-50 p-4 rounded-lg">
                           <p className="text-base text-gray-600">Points from Game Badges</p>
-                          <p className="text-3xl font-bold text-google-green">{scrapedData.points.gameBadges}</p>
+                          <p className="text-3xl font-bold text-google-green">{scrapedData?.points?.gameBadges || 0}</p>
                         </div>
                         <div className="bg-gray-50 p-4 rounded-lg">
                           <p className="text-base text-gray-600">Points from Trivia Badges</p>
-                          <p className="text-3xl font-bold text-google-yellow">{scrapedData.points.triviaBadges}</p>
+                          <p className="text-3xl font-bold text-google-yellow">{scrapedData?.points?.triviaBadges || 0}</p>
                         </div>
                         <div className="bg-gray-50 p-4 rounded-lg">
                           <p className="text-base text-gray-600">Points from Skill Badges</p>
-                          <p className="text-3xl font-bold text-google-red">{scrapedData.points.skillBadges}</p>
+                          <p className="text-3xl font-bold text-google-red">{scrapedData?.points?.skillBadges || 0}</p>
                         </div>
                       </div>
 
@@ -346,12 +346,12 @@ function PointsCalculator() {
                           <div>
                             <div className="flex justify-between text-sm text-blue-800 mb-1">
                               <span className="font-medium">Tier 1</span>
-                              <span>{Math.min(scrapedData.points.total, 20)}/20 Points</span>
+                              <span>{Math.min(scrapedData?.points?.total || 0, 20)}/20 Points</span>
                             </div>
                             <div className="h-2 bg-blue-100 rounded-full overflow-hidden">
                               <div 
                                 className="h-full bg-blue-500 rounded-full transition-all duration-500"
-                                style={{ width: `${Math.min((scrapedData.points.total / 20) * 100, 100)}%` }}
+                                style={{ width: `${Math.min(((scrapedData?.points?.total || 0) / 20) * 100, 100)}%` }}
                               ></div>
                             </div>
                           </div>
@@ -360,12 +360,12 @@ function PointsCalculator() {
                           <div>
                             <div className="flex justify-between text-sm text-purple-800 mb-1">
                               <span className="font-medium">Tier 2</span>
-                              <span>{Math.min(scrapedData.points.total, 40)}/40 Points</span>
+                              <span>{Math.min(scrapedData?.points?.total || 0, 40)}/40 Points</span>
                             </div>
                             <div className="h-2 bg-purple-100 rounded-full overflow-hidden">
                               <div 
                                 className="h-full bg-purple-500 rounded-full transition-all duration-500"
-                                style={{ width: `${Math.min((scrapedData.points.total / 40) * 100, 100)}%` }}
+                                style={{ width: `${Math.min(((scrapedData?.points?.total || 0) / 40) * 100, 100)}%` }}
                               ></div>
                             </div>
                           </div>
@@ -374,12 +374,12 @@ function PointsCalculator() {
                           <div>
                             <div className="flex justify-between text-sm text-indigo-800 mb-1">
                               <span className="font-medium">Tier 3</span>
-                              <span>{Math.min(scrapedData.points.total, 65)}/65 Points</span>
+                              <span>{Math.min(scrapedData?.points?.total || 0, 65)}/65 Points</span>
                             </div>
                             <div className="h-2 bg-indigo-100 rounded-full overflow-hidden">
                               <div 
                                 className="h-full bg-indigo-500 rounded-full transition-all duration-500"
-                                style={{ width: `${Math.min((scrapedData.points.total / 65) * 100, 100)}%` }}
+                                style={{ width: `${Math.min(((scrapedData?.points?.total || 0) / 65) * 100, 100)}%` }}
                               ></div>
                             </div>
                           </div>
@@ -388,12 +388,12 @@ function PointsCalculator() {
                           <div>
                             <div className="flex justify-between text-sm text-pink-800 mb-1">
                               <span className="font-medium">Tier 4</span>
-                              <span>{Math.min(scrapedData.points.total, 75)}/75 Points</span>
+                              <span>{Math.min(scrapedData?.points?.total || 0, 75)}/75 Points</span>
                             </div>
                             <div className="h-2 bg-pink-100 rounded-full overflow-hidden">
                               <div 
                                 className="h-full bg-pink-500 rounded-full transition-all duration-500"
-                                style={{ width: `${Math.min((scrapedData.points.total / 75) * 100, 100)}%` }}
+                                style={{ width: `${Math.min(((scrapedData?.points?.total || 0) / 75) * 100, 100)}%` }}
                               ></div>
                             </div>
                           </div>
@@ -402,12 +402,12 @@ function PointsCalculator() {
                           <div>
                             <div className="flex justify-between text-sm text-rose-800 mb-1">
                               <span className="font-medium">Tier 5</span>
-                              <span>{Math.min(scrapedData.points.total, 85)}/85 Points</span>
+                              <span>{Math.min(scrapedData?.points?.total || 0, 85)}/85 Points</span>
                             </div>
                             <div className="h-2 bg-rose-100 rounded-full overflow-hidden">
                               <div 
                                 className="h-full bg-rose-500 rounded-full transition-all duration-500"
-                                style={{ width: `${Math.min((scrapedData.points.total / 85) * 100, 100)}%` }}
+                                style={{ width: `${Math.min(((scrapedData?.points?.total || 0) / 85) * 100, 100)}%` }}
                               ></div>
                             </div>
                           </div>
@@ -417,21 +417,21 @@ function PointsCalculator() {
                         <div className="mt-4 pt-4 border-t border-gray-200">
                           <p className="text-sm text-gray-600">
                             Current Tier: {
-                              scrapedData.points.total >= 85 ? 'Tier 5' :
-                              scrapedData.points.total >= 75 ? 'Tier 4' :
-                              scrapedData.points.total >= 65 ? 'Tier 3' :
-                              scrapedData.points.total >= 40 ? 'Tier 2' :
-                              scrapedData.points.total >= 20 ? 'Tier 1' :
+                              (scrapedData?.points?.total || 0) >= 85 ? 'Tier 5' :
+                              (scrapedData?.points?.total || 0) >= 75 ? 'Tier 4' :
+                              (scrapedData?.points?.total || 0) >= 65 ? 'Tier 3' :
+                              (scrapedData?.points?.total || 0) >= 40 ? 'Tier 2' :
+                              (scrapedData?.points?.total || 0) >= 20 ? 'Tier 1' :
                               'Not Tiered'
                             }
                           </p>
-                          {scrapedData.points.total < 85 && (
+                          {(scrapedData?.points?.total || 0) < 85 && (
                             <p className="text-xs text-gray-500 mt-1">
-                              {scrapedData.points.total >= 75 ? `${85 - scrapedData.points.total} points to Tier 5` :
-                               scrapedData.points.total >= 65 ? `${75 - scrapedData.points.total} points to Tier 4` :
-                               scrapedData.points.total >= 40 ? `${65 - scrapedData.points.total} points to Tier 3` :
-                               scrapedData.points.total >= 20 ? `${40 - scrapedData.points.total} points to Tier 2` :
-                               `${20 - scrapedData.points.total} points to Tier 1`}
+                              {(scrapedData?.points?.total || 0) >= 75 ? `${85 - (scrapedData?.points?.total || 0)} points to Tier 5` :
+                               (scrapedData?.points?.total || 0) >= 65 ? `${75 - (scrapedData?.points?.total || 0)} points to Tier 4` :
+                               (scrapedData?.points?.total || 0) >= 40 ? `${65 - (scrapedData?.points?.total || 0)} points to Tier 3` :
+                               (scrapedData?.points?.total || 0) >= 20 ? `${40 - (scrapedData?.points?.total || 0)} points to Tier 2` :
+                               `${20 - (scrapedData?.points?.total || 0)} points to Tier 1`}
                             </p>
                           )}
                         </div>
