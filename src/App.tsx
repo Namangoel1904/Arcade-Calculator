@@ -47,6 +47,9 @@ interface ScrapedData {
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
 
+// Ensure API_BASE_URL has the protocol
+const API_URL = API_BASE_URL.startsWith('http') ? API_BASE_URL : `https://${API_BASE_URL}`
+
 function PointsCalculator() {
   const [profileUrl, setProfileUrl] = useState('')
   const [scrapedData, setScrapedData] = useState<ScrapedData | null>(null)
@@ -84,10 +87,10 @@ function PointsCalculator() {
     try {
       setLoading(true)
       setError('')
-      const apiUrl = `${API_BASE_URL}/api/calculate-points`
+      const apiUrl = `${API_URL}/api/calculate-points`
       console.log('Making request to:', apiUrl)
       console.log('With profile URL:', profileUrl)
-      console.log('API_BASE_URL value:', API_BASE_URL)
+      console.log('API_URL value:', API_URL)
       
       const response = await axios.get(apiUrl, {
         params: { profileUrl },
