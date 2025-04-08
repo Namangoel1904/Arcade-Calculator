@@ -132,21 +132,23 @@ function PointsCalculator() {
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <style>{scrollbarStyles}</style>
+      {/* Remove the old mobile navigation bar */}
+
       <div className="mx-auto max-w-[90%]">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-8">
+          <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-4 sm:mb-8">
             Google Arcade Points Calculator
           </h1>
-          <p className="text-lg text-gray-600 mb-8">
+          <p className="text-sm sm:text-lg text-gray-600 mb-6 sm:mb-8">
             Enter your Cloud Skills Boost public profile URL to calculate your points
           </p>
         </div>
 
         {/* Profile URL Input Section */}
-        <div className="bg-white shadow rounded-lg p-6 mb-8">
+        <div className="bg-white shadow rounded-lg p-4 sm:p-6 mb-6 sm:mb-8">
           <div className="space-y-4">
             <div className="relative">
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <div className="flex-1 relative">
                   <input
                     type="text"
@@ -154,7 +156,7 @@ function PointsCalculator() {
                     onChange={(e) => setProfileUrl(e.target.value)}
                     onFocus={() => setShowUrlHistory(true)}
                     placeholder="https://www.cloudskillsboost.google/public_profiles/..."
-                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-google-blue focus:ring-google-blue pr-10"
+                    className="w-full text-sm sm:text-base rounded-md border-gray-300 shadow-sm focus:border-google-blue focus:ring-google-blue pr-10"
                   />
                   {recentUrls.length > 0 && (
                     <button
@@ -170,7 +172,7 @@ function PointsCalculator() {
                 <button
                   onClick={calculatePoints}
                   disabled={loading || !profileUrl}
-                  className="px-6 py-2 bg-google-blue text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-google-blue focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full sm:w-auto px-6 py-3 sm:py-2 bg-google-blue text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-google-blue focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                 >
                   {loading ? 'Calculating...' : 'Calculate Points'}
                 </button>
@@ -221,14 +223,14 @@ function PointsCalculator() {
                 onChange={(e) => setIsFacilitator(e.target.checked)}
                 className="h-4 w-4 text-google-blue focus:ring-google-blue border-gray-300 rounded cursor-pointer"
               />
-              <label htmlFor="facilitator" className="text-sm font-medium text-gray-700 cursor-pointer">
+              <label htmlFor="facilitator" className="text-xs sm:text-sm font-medium text-gray-700 cursor-pointer">
                 Enrolled in Facilitator Program
               </label>
             </div>
           </div>
 
           {error && (
-            <div className="mt-4 text-red-600 text-sm">
+            <div className="mt-4 text-red-600 text-xs sm:text-sm">
               {error}
             </div>
           )}
@@ -236,15 +238,15 @@ function PointsCalculator() {
 
         {/* Results Section */}
         {scrapedData && (
-          <div className="space-y-8">
-            <div className="flex gap-8">
+          <div className="space-y-6 sm:space-y-8">
+            <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
               {/* Points Calculation Section */}
               <div className="flex-1">
-                <div className="bg-white shadow rounded-lg p-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="bg-white shadow rounded-lg p-4 sm:p-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
                     {/* Points Breakdown Section */}
                     <div>
-                      <h2 className="text-3xl font-semibold text-gray-900 mb-6">
+                      <h2 className="text-xl sm:text-3xl font-semibold text-gray-900 mb-4 sm:mb-6">
                         Your Points Breakdown
                       </h2>
                       <div className="grid grid-cols-2 gap-4 mb-6">
@@ -299,9 +301,9 @@ function PointsCalculator() {
                       </div>
                     </div>
 
-                    {/* Recent Badges Section */}
-                    <div>
-                      <h2 className="text-3xl font-semibold text-gray-900 mb-6">
+                    {/* Recent Badges Section - Hidden on mobile, visible on desktop */}
+                    <div className="hidden lg:block">
+                      <h2 className="text-xl sm:text-3xl font-semibold text-gray-900 mb-6">
                         Badges Earned After Jan 8, 2025
                       </h2>
                       <div className="space-y-4 max-h-[600px] overflow-y-auto pr-4 custom-scrollbar">
@@ -341,9 +343,9 @@ function PointsCalculator() {
                 </div>
               </div>
 
-              {/* Rewards Section */}
-              <div className="w-1/4">
-                <div className="bg-white shadow rounded-lg p-6 sticky top-6">
+              {/* Rewards Section - Moved below on mobile */}
+              <div className="w-full lg:w-1/4">
+                <div className="bg-white shadow rounded-lg p-4 sm:p-6 sticky top-6">
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
                     <h2 className="text-3xl font-semibold text-blue-900 mb-6">
                       Rewards
@@ -727,8 +729,7 @@ function PointsCalculator() {
       </div>
 
       {/* Info Button and Rules Tooltip */}
-      <div className="fixed bottom-8 right-8 flex items-center gap-3">
-        <span className="text-base font-medium text-gray-600">Check Point System</span>
+      <div className="fixed bottom-8 right-8">
         <div className="relative">
           <button
             onMouseEnter={() => setShowRules(true)}
@@ -746,7 +747,7 @@ function PointsCalculator() {
               <img 
                 src={pointSystemImage}
                 alt="Points calculation rules"
-                className="max-w-sm rounded-lg"
+                className="max-w-[200px] sm:max-w-sm rounded-lg"
               />
             </div>
           )}
@@ -757,9 +758,72 @@ function PointsCalculator() {
 }
 
 function App() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
     <Router>
-      <div>
+      <div className="relative">
+        {/* Overlay for mobile menu */}
+        {isMobileMenuOpen && (
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 z-40 sm:hidden"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+        )}
+
+        {/* Mobile Side Navigation */}
+        <div className={`
+          fixed top-0 left-0 h-full w-64 bg-white z-50 transform transition-transform duration-300 ease-in-out
+          ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
+          sm:hidden
+        `}>
+          <div className="p-4 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <span className="text-xl font-bold text-google-blue">Being Notified</span>
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="p-2 rounded-md text-gray-500 hover:text-gray-600 hover:bg-gray-100"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <nav className="p-4">
+            <div className="flex flex-col space-y-4">
+              <Link
+                to="/"
+                className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Points Calculator
+              </Link>
+              <Link
+                to="/skill-badges"
+                className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Skill Badges
+              </Link>
+              <Link
+                to="/youtube"
+                className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                YouTube Content
+              </Link>
+              <Link
+                to="/join-us"
+                className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Join Us
+              </Link>
+            </div>
+          </nav>
+        </div>
+
         <nav className="bg-white shadow-lg">
           <div className="max-w-7xl mx-auto px-4">
             <div className="flex justify-between h-16">
@@ -767,6 +831,7 @@ function App() {
                 <div className="flex-shrink-0 flex items-center">
                   <span className="text-xl font-bold text-google-blue">Being Notified</span>
                 </div>
+                {/* Desktop Navigation - Hidden on mobile */}
                 <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
                   <Link
                     to="/"
@@ -793,6 +858,17 @@ function App() {
                     Join Us
                   </Link>
                 </div>
+              </div>
+              {/* Hamburger Menu Button - Only visible on mobile */}
+              <div className="sm:hidden flex items-center">
+                <button
+                  onClick={() => setIsMobileMenuOpen(true)}
+                  className="p-2 rounded-md text-gray-500 hover:text-gray-600 hover:bg-gray-100"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
