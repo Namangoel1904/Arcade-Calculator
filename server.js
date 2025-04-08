@@ -43,8 +43,26 @@ app.get('/api/calculate-points', async (req, res) => {
 
     // Fetch the profile page
     console.log('Fetching profile page...');
-    const response = await axios.get(profileUrl);
-    console.log('Profile page fetched successfully');
+    let response;
+    try {
+      response = await axios.get(profileUrl, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+      });
+      console.log('Profile page fetched successfully');
+    } catch (error) {
+      console.error('Error fetching profile page:', error.message);
+      if (error.response) {
+        console.error('Response status:', error.response.status);
+        console.error('Response data:', error.response.data);
+      }
+      return res.status(500).json({
+        error: 'Failed to access profile page. The profile might be private or not accessible.',
+        points: { total: 0, gameBadges: 0, triviaBadges: 0, skillBadges: 0 },
+        badges: []
+      });
+    }
     
     // Log the HTML content for debugging
     console.log('HTML Content:', response.data.substring(0, 500) + '...');
@@ -74,24 +92,32 @@ app.get('/api/calculate-points', async (req, res) => {
       '.badge-card',
       '[data-cy="badge"]',
       '.badge',
+      '.profile-badge',  // New selector
+      '.achievement-badge',  // New selector
+      '.skill-badge',  // New selector
       // Add any class that looks like it might be related to badges
     ];
 
     badgeSelectors.forEach(selector => {
       console.log(`Checking selector: ${selector}`);
-      console.log(`Found ${$(selector).length} elements with this selector`);
+      const elements = $(selector);
+      console.log(`Found ${elements.length} elements with this selector`);
       
-      $(selector).each((_, element) => {
+      elements.each((_, element) => {
         // Try to find badge information using various potential selectors
         const el = $(element);
         const badgeName = el.find('[data-cy="badge-title"]').text().trim() ||
                          el.find('.badge-name').text().trim() ||
                          el.find('.ql-badge-title').text().trim() ||
-                         el.find('h3').text().trim();
+                         el.find('h3').text().trim() ||
+                         el.find('.badge-title').text().trim() ||  // New selector
+                         el.find('.achievement-title').text().trim();  // New selector
                          
         const badgeType = el.find('[data-cy="badge-type"]').text().trim() ||
                          el.find('.badge-type').text().trim() ||
-                         el.find('.ql-badge-type').text().trim();
+                         el.find('.ql-badge-type').text().trim() ||
+                         el.find('.badge-category').text().trim() ||  // New selector
+                         el.find('.achievement-type').text().trim();  // New selector
 
         if (badgeName) {
           console.log('Found badge:', { name: badgeName, type: badgeType });
