@@ -84,9 +84,11 @@ function PointsCalculator() {
     try {
       setLoading(true)
       setError('')
+      console.log('Making request to:', `${API_BASE_URL}/api/calculate-points?profileUrl=${profileUrl}`)
       const response = await axios.get(`${API_BASE_URL}/api/calculate-points`, {
         params: { profileUrl }
       })
+      console.log('Response received:', response.data)
       setScrapedData(response.data)
       saveUrlToHistory(profileUrl) // Save URL after successful calculation
     } catch (err) {
