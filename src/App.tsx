@@ -84,15 +84,28 @@ function PointsCalculator() {
     try {
       setLoading(true)
       setError('')
-      console.log('Making request to:', `${API_BASE_URL}/api/calculate-points?profileUrl=${profileUrl}`)
-      const response = await axios.get(`${API_BASE_URL}/api/calculate-points`, {
-        params: { profileUrl }
+      const apiUrl = `${API_BASE_URL}/api/calculate-points`
+      console.log('Making request to:', apiUrl)
+      console.log('With profile URL:', profileUrl)
+      console.log('API_BASE_URL value:', API_BASE_URL)
+      
+      const response = await axios.get(apiUrl, {
+        params: { profileUrl },
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
       })
       console.log('Response received:', response.data)
       setScrapedData(response.data)
       saveUrlToHistory(profileUrl) // Save URL after successful calculation
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error calculating points:', err)
+      console.error('Error details:', {
+        message: err.message,
+        response: err.response?.data,
+        status: err.response?.status
+      })
       setError('Failed to calculate points. Please try again.')
     } finally {
       setLoading(false)
