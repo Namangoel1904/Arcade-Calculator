@@ -3,23 +3,23 @@ import React from 'react'
 const FEATURED_VIDEOS = [
   {
     id: '8ZxgbK6e64E',
-    title: 'Google Cloud Arcade - Points System Explained'
+    title: 'Free Machine Learning Course'
   },
   {
     id: 'DAzOC_EYxKA',
-    title: 'Google Cloud Arcade - Getting Started'
+    title: 'Ultimate Guide to Google Arcade'
   },
   {
     id: 'Boqv3YIK3AU',
-    title: 'Google Cloud Arcade - Skill Badges'
+    title: 'Official Google Arcade swags'
   },
   {
     id: 'cOzL-H8VaXk',
-    title: 'Google Cloud Arcade - Game Badges'
+    title: '6 Best skill badges'
   },
   {
     id: 'VKNdBJHHV20',
-    title: 'Google Cloud Arcade - Trivia Badges'
+    title: 'How to transfer cloud credits from one account to another'
   }
 ]
 
