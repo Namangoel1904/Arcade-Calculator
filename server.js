@@ -63,86 +63,56 @@ app.get('/api/calculate-points', async (req, res) => {
         badges: []
       });
     }
-    
-    // Log the HTML content for debugging
-    console.log('HTML Content:', response.data.substring(0, 500) + '...');
 
     const $ = cheerio.load(response.data);
-
     const badges = [];
     let gamePoints = 0;
     let triviaPoints = 0;
     let skillPoints = 0;
 
-    // Try different selectors that might contain badges
-    console.log('Searching for badges...');
-    
-    // Log all available classes for debugging
-    const allClasses = new Set();
-    $('*[class]').each((_, el) => {
-      const classes = $(el).attr('class').split(/\s+/);
-      classes.forEach(cls => allClasses.add(cls));
-    });
-    console.log('Available classes on the page:', Array.from(allClasses));
-
-    // Try multiple potential selectors
-    const badgeSelectors = [
-      '.badge-item',
-      '.ql-badge-card',
-      '.badge-card',
-      '[data-cy="badge"]',
-      '.badge',
-      '.profile-badge',  // New selector
-      '.achievement-badge',  // New selector
-      '.skill-badge',  // New selector
-      // Add any class that looks like it might be related to badges
-    ];
-
-    badgeSelectors.forEach(selector => {
-      console.log(`Checking selector: ${selector}`);
-      const elements = $(selector);
-      console.log(`Found ${elements.length} elements with this selector`);
+    // Find all badge elements
+    $('.profile-badge').each((_, element) => {
+      const el = $(element);
       
-      elements.each((_, element) => {
-        // Try to find badge information using various potential selectors
-        const el = $(element);
-        const badgeName = el.find('[data-cy="badge-title"]').text().trim() ||
-                         el.find('.badge-name').text().trim() ||
-                         el.find('.ql-badge-title').text().trim() ||
-                         el.find('h3').text().trim() ||
-                         el.find('.badge-title').text().trim() ||  // New selector
-                         el.find('.achievement-title').text().trim();  // New selector
-                         
-        const badgeType = el.find('[data-cy="badge-type"]').text().trim() ||
-                         el.find('.badge-type').text().trim() ||
-                         el.find('.ql-badge-type').text().trim() ||
-                         el.find('.badge-category').text().trim() ||  // New selector
-                         el.find('.achievement-type').text().trim();  // New selector
+      // Extract badge name from the title span
+      const badgeName = el.find('.ql-title-medium').text().trim();
+      
+      // Extract earned date from the body span
+      const earnedDate = el.find('.ql-body-medium').text().trim();
+      
+      // Determine badge type based on name
+      let badgeType = 'unknown';
+      if (badgeName.toLowerCase().includes('trivia')) {
+        badgeType = 'trivia';
+      } else if (badgeName.toLowerCase().includes('skill')) {
+        badgeType = 'skill';
+      } else if (badgeName.toLowerCase().includes('game')) {
+        badgeType = 'game';
+      }
 
-        if (badgeName) {
-          console.log('Found badge:', { name: badgeName, type: badgeType });
-          
-          const badgePoints = calculateBadgePoints(badgeType);
-          badges.push({
-            name: badgeName,
-            type: badgeType || 'unknown',
-            earnedDate: new Date().toISOString() // Add current date as earned date
-          });
+      if (badgeName) {
+        console.log('Found badge:', { name: badgeName, type: badgeType });
+        
+        const badgePoints = calculateBadgePoints(badgeType);
+        badges.push({
+          name: badgeName,
+          type: badgeType,
+          earnedDate: earnedDate
+        });
 
-          // Update points based on badge type
-          switch (badgeType.toLowerCase()) {
-            case 'game':
-              gamePoints += badgePoints;
-              break;
-            case 'trivia':
-              triviaPoints += badgePoints;
-              break;
-            case 'skill':
-              skillPoints += badgePoints;
-              break;
-          }
+        // Update points based on badge type
+        switch (badgeType.toLowerCase()) {
+          case 'game':
+            gamePoints += badgePoints;
+            break;
+          case 'trivia':
+            triviaPoints += badgePoints;
+            break;
+          case 'skill':
+            skillPoints += badgePoints;
+            break;
         }
-      });
+      }
     });
 
     console.log('Badges found:', badges.length);
