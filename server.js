@@ -26,6 +26,7 @@ const GAME_BADGE_KEYWORDS = [
   "Level 1",
   "Level 2",
   "Base Camp",
+  "Arcade TechCare",
   "Arcade Certification Zone",
   "Level 3"
 ];
@@ -194,7 +195,8 @@ function calculatePoints(badges) {
           badge.name.toLowerCase().includes('love beyond') ||
           badge.name.toLowerCase().includes('arcade skills resolve') ||
           badge.name.toLowerCase().includes('arcade skillsresolve') ||
-          badge.name.toLowerCase().includes('color your skills')
+          badge.name.toLowerCase().includes('color your skills') ||
+          badge.name.toLowerCase().includes('arcade techcare')
         ) {
           gamePoints += 2;
         } else {
