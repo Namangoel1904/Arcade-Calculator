@@ -30,7 +30,7 @@ app.get('/api/calculate-points', async (req, res) => {
     if (!profileUrl) {
       return res.status(400).json({
         error: 'Profile URL is required',
-        points: { total: 0, game: 0, trivia: 0, skill: 0 },
+        points: { total: 0, gameBadges: 0, triviaBadges: 0, skillBadges: 0 },
         badges: []
       });
     }
@@ -94,7 +94,7 @@ app.get('/api/calculate-points', async (req, res) => {
           badges.push({
             name: badgeName,
             type: badgeType || 'unknown',
-            points: badgePoints
+            earnedDate: new Date().toISOString() // Add current date as earned date
           });
 
           // Update points based on badge type
@@ -121,9 +121,9 @@ app.get('/api/calculate-points', async (req, res) => {
     const result = {
       points: {
         total: totalPoints,
-        game: gamePoints,
-        trivia: triviaPoints,
-        skill: skillPoints
+        gameBadges: gamePoints,
+        triviaBadges: triviaPoints,
+        skillBadges: skillPoints
       },
       badges
     };
@@ -141,7 +141,7 @@ app.get('/api/calculate-points', async (req, res) => {
     res.status(500).json({
       error: 'Failed to scrape profile data',
       details: error.message,
-      points: { total: 0, game: 0, trivia: 0, skill: 0 },
+      points: { total: 0, gameBadges: 0, triviaBadges: 0, skillBadges: 0 },
       badges: []
     });
   }
