@@ -276,6 +276,7 @@ function PointsCalculator() {
                               <li>Love Beyond: 2 points</li>
                               <li>Arcade Skills Resolve: 2 points</li>
                               <li>Color Your Skills: 2 points</li>
+                              <li>Arcade TechCare: 2 points</li>
                               <li>Other Game Badges: 1 point each</li>
                             </ul>
                           </div>
