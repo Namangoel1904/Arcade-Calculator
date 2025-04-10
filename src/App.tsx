@@ -328,8 +328,8 @@ function PointsCalculator() {
                                 : badge.type === 'trivia'
                                 ? 'bg-google-yellow text-white'
                                 : badge.type === 'skill'
-                                ? 'bg-google-red text-white'
-                                : badge.type === 'completion'
+                                // ? 'bg-google-red text-white'
+                                // : badge.type === 'completion'
                                 ? 'bg-gray-500 text-white'
                                 : 'bg-gray-400 text-white'
                             }`}>
