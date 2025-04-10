@@ -29,7 +29,7 @@ const scrollbarStyles = `
 
 interface Badge {
   name: string
-  type: 'game' | 'trivia' | 'skill'
+  type: 'game' | 'trivia' | 'skill' | 'lab-free'
   earnedDate: string
 }
 
@@ -518,12 +518,12 @@ function PointsCalculator() {
                         <div>
                           <div className="flex justify-between text-sm text-blue-800 mb-1">
                             <span>Lab-free Courses (4)</span>
-                            <span>0/4</span>
+                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'lab-free').length || 0, 4)}/4</span>
                           </div>
                           <div className="h-2 bg-blue-100 rounded-full overflow-hidden">
                             <div 
                               className="h-full bg-blue-500 rounded-full transition-all duration-500"
-                              style={{ width: '0%' }}
+                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'lab-free').length || 0) / 4 * 100, 100)}%`   }}
                             ></div>
                           </div>
                         </div>
@@ -579,12 +579,12 @@ function PointsCalculator() {
                         <div>
                           <div className="flex justify-between text-sm text-purple-800 mb-1">
                             <span>Lab-free Courses (8)</span>
-                            <span>0/8</span>
+                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'lab-free').length || 0, 8)}/8</span>
                           </div>
                           <div className="h-2 bg-purple-100 rounded-full overflow-hidden">
                             <div 
                               className="h-full bg-purple-500 rounded-full transition-all duration-500"
-                              style={{ width: '0%' }}
+                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'lab-free').length || 0) / 8 * 100, 100)}%`  }}
                             ></div>
                           </div>
                         </div>
@@ -640,12 +640,12 @@ function PointsCalculator() {
                         <div>
                           <div className="flex justify-between text-sm text-indigo-800 mb-1">
                             <span>Lab-free Courses (12)</span>
-                            <span>0/12</span>
+                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'lab-free').length || 0, 12)}/12</span>
                           </div>
                           <div className="h-2 bg-indigo-100 rounded-full overflow-hidden">
                             <div 
                               className="h-full bg-indigo-500 rounded-full transition-all duration-500"
-                              style={{ width: '0%' }}
+                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'lab-free').length || 0) / 12 * 100, 100)}%`   }}
                             ></div>
                           </div>
                         </div>
@@ -701,12 +701,12 @@ function PointsCalculator() {
                         <div>
                           <div className="flex justify-between text-sm text-pink-800 mb-1">
                             <span>Lab-free Courses (16)</span>
-                            <span>0/16</span>
+                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'lab-free').length || 0, 16)}/16</span>
                           </div>
                           <div className="h-2 bg-pink-100 rounded-full overflow-hidden">
                             <div 
                               className="h-full bg-pink-500 rounded-full transition-all duration-500"
-                              style={{ width: '0%' }}
+                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'lab-free').length || 0) / 16 * 100, 100)}%`   }}
                             ></div>
                           </div>
                         </div>
