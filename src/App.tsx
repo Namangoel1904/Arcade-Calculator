@@ -5,6 +5,7 @@ import pointSystemImage from './Point System.png'
 import SkillBadgeList from './SkillBadgeList'
 import YouTubeContent from './YouTubeContent'
 import JoinUs from './JoinUs'
+import LabFreeCoursesList from './LabFreeCoursesList'
 
 // Add custom scrollbar styles
 const scrollbarStyles = `
@@ -328,8 +329,8 @@ function PointsCalculator() {
                                 : badge.type === 'trivia'
                                 ? 'bg-google-yellow text-white'
                                 : badge.type === 'skill'
-                                ? 'bg-google-red text-white'
-                                : badge.type === 'completion'
+                                // ? 'bg-google-red text-white'
+                                // : badge.type === 'completion'
                                 ? 'bg-gray-500 text-white'
                                 : 'bg-gray-400 text-white'
                             }`}>
@@ -807,6 +808,13 @@ function App() {
                 Skill Badges
               </Link>
               <Link
+                to="/lab-free-courses"
+                className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Lab-Free Courses
+              </Link>
+              <Link
                 to="/youtube"
                 className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -846,6 +854,12 @@ function App() {
                     Skill Badges
                   </Link>
                   <Link
+                    to="/lab-free-courses"
+                    className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                  >
+                    Lab-Free Courses
+                  </Link>
+                  <Link
                     to="/youtube"
                     className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
                   >
@@ -877,6 +891,7 @@ function App() {
         <Routes>
           <Route path="/" element={<PointsCalculator />} />
           <Route path="/skill-badges" element={<SkillBadgeList />} />
+          <Route path="/lab-free-courses" element={<LabFreeCoursesList />} />
           <Route path="/youtube" element={<YouTubeContent />} />
           <Route path="/join-us" element={<JoinUs />} />
         </Routes>
