@@ -869,6 +869,13 @@ function App() {
                     to="/join-us"
                     className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
                   >
+                    About Us
+              </Link>
+              <Link
+                to="/legal"
+                className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
                     Join Us
                   </Link>
                 </div>
