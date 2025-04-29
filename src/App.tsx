@@ -6,7 +6,7 @@ import SkillBadgeList from './SkillBadgeList'
 import YouTubeContent from './YouTubeContent'
 import JoinUs from './JoinUs'
 import LabFreeCoursesList from './LabFreeCoursesList'
-
+import AboutUs from './AboutUs'
 // Add custom scrollbar styles
 const scrollbarStyles = `
   .custom-scrollbar::-webkit-scrollbar {
