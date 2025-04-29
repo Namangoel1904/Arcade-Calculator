@@ -44,6 +44,9 @@ const GAME_BADGE_KEYWORDS = [
 
 const SKILL_BADGES = [
   "Analyze BigQuery Data in Connected Sheets",
+  "Discover and Protect Sensitive Data Across Your Ecosystem",
+  "Protect Cloud Traffic with Chrome Enterprise Premium Security",
+  "Explore Generative AI with the Gemini API in Vertex AI",
   "Streaming Analytics into BigQuery",
   "Store, Process, and Manage Data on Google Cloud - Console",
   "Using the Google Cloud Speech API",
