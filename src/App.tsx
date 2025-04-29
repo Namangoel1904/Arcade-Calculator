@@ -901,6 +901,7 @@ function App() {
           <Route path="/lab-free-courses" element={<LabFreeCoursesList />} />
           <Route path="/youtube" element={<YouTubeContent />} />
           <Route path="/join-us" element={<JoinUs />} />
+          <Route path="/about" element={<AboutUs />} />
         </Routes>
       </div>
     </Router>
