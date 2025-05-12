@@ -30,61 +30,59 @@ const BookDemand: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#f3f4fd] flex items-center justify-center py-8 px-2">
       <Helmet>
         <title>Book Demand Service - Affordable Books at ₹19</title>
         <meta name="description" content="Get your required books in PDF format for just ₹19. Fill out the form and receive your book via email." />
         <link href="//cdn-images.mailchimp.com/embedcode/classic-061523.css" rel="stylesheet" type="text/css" />
       </Helmet>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Left Side - Static Image */}
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-            <img
-              src="/book-banner.jpg"
-              alt="Book Service Banner"
-              className="w-full h-full object-cover"
-            />
+      <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 bg-transparent rounded-3xl shadow-none">
+        {/* Left Side - Modern Book Image */}
+        <div className="flex flex-col items-center justify-center bg-white rounded-3xl shadow-xl p-6 md:p-10">
+          <img
+            src="/book-banner.jpg"
+            alt="Book Service Banner"
+            className="w-full max-w-xs md:max-w-sm rounded-2xl shadow-lg object-cover"
+          />
+          <div className="mt-6 text-center">
+            <h2 className="text-3xl font-extrabold text-[#7b2ff2] tracking-tight mb-2">BOOK BOX <span className="text-[#f357a8]">PDF</span></h2>
+            <p className="text-lg text-gray-700 font-medium">Books on Demand at Just Rs.19 only</p>
           </div>
+        </div>
 
-          {/* Right Side - Dynamic Content */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
+        {/* Right Side - Modern Card with Offer and CTA */}
+        <div className="flex flex-col items-center justify-center">
+          <div className="w-full bg-white rounded-3xl shadow-2xl px-6 py-10 md:px-10 md:py-14 flex flex-col items-center">
+            {/* Only show logo and offer texts if not showing form or success */}
+            {!showForm && !showSuccess && (
+              <>
+                <img src="/logo.jpg" alt="Being Notified Logo" className="h-8 mb-6" />
+                <h1 className="text-2xl md:text-3xl font-extrabold text-[#7b2ff2] text-center uppercase mb-2 tracking-tight">SKIP THE PRICE TAG,<br />KEEP THE KNOWLEDGE</h1>
+                <p className="text-lg md:text-xl font-semibold text-[#7b2ff2] text-center mb-2">Book you need, Price you love <span role="img" aria-label="fire">🔥</span></p>
+                <p className="text-base md:text-lg text-[#7b2ff2] text-center mb-2">Demand any book in PDF at <span className="font-bold">₹19</span> only</p>
+                <p className="text-sm text-gray-600 text-center mb-6">Payment would be asked after book delivered to your mail!</p>
+              </>
+            )}
+            {/* CTA Buttons or Form */}
             {!showForm ? (
-              <div className="space-y-6">
-                <h1 className="text-3xl font-bold text-gray-900">Affordable Books for All</h1>
-                <div className="prose prose-lg text-gray-600">
-                  <p>
-                    Our mission is to make quality educational resources accessible to every student.<br></br>
-                    <b>We provide PDF versions of books at an affordable price of just ₹19.</b>
-                  </p>
-                  <br></br>
-                  <p className="font-bold text-xl text-blue-600 mb-4">
-                    "Skip The Price Tag, Keep The Knowledge" <br></br>
-                    "Book you need, Price you love"
-                  </p>
-                  <p>
-                    Whether you're preparing for exams, expanding your knowledge, or just love reading,
-                    we're here to help you get the books you need.
-                  </p>
-                  <br></br>
-                  <ul className="list-disc pl-6 space-y-2">
-                    <li>Delivery of PDF via email in 2 days</li>
-                    <li>Wide range of books available</li>
-                    <li>Secure payment process</li>
-                    <li><b>Payment would be ask only after the book is delivered</b></li>
-                  </ul>
-                </div>
+              <div className="w-full flex flex-col items-center gap-4">
                 <button
                   onClick={() => setShowForm(true)}
-                  className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                  className="w-full py-3 text-lg font-bold rounded-full bg-gradient-to-r from-[#7b2ff2] to-[#f357a8] text-white shadow-lg hover:from-[#5f1bbd] hover:to-[#d13b8a] transition-all duration-200"
                 >
-                  Demand Your Book Now
+                  Demand Now
+                </button>
+                <button
+                  onClick={() => window.location.href = '/'}
+                  className="w-full py-3 text-lg font-semibold rounded-full bg-gray-200 text-gray-500 hover:bg-gray-300 transition-all duration-200"
+                >
+                  No, thanks
                 </button>
               </div>
             ) : showSuccess ? (
               <div className="text-center space-y-6">
-                <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+                <div className="bg-green-50 border border-green-200 rounded-2xl p-6">
                   <svg
                     className="mx-auto h-12 w-12 text-green-500"
                     fill="none"
@@ -100,7 +98,7 @@ const BookDemand: React.FC = () => {
                   </svg>
                   <h2 className="mt-4 text-2xl font-bold text-green-900">Request Received!</h2>
                   <p className="mt-2 text-green-700">
-                    Thank you for your book request. We'll process it and send you the book via email shortly, Payment would be asked only after the book is delivered.
+                    Thank you for your book request. We'll process it and send you the book via email shortly. Payment would be asked only after the book is delivered.
                   </p>
                 </div>
                 <button
@@ -108,13 +106,23 @@ const BookDemand: React.FC = () => {
                     setShowSuccess(false);
                     setShowForm(false);
                   }}
-                  className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                  className="w-full bg-gradient-to-r from-[#7b2ff2] to-[#f357a8] text-white py-3 px-6 rounded-full font-bold hover:from-[#5f1bbd] hover:to-[#d13b8a] transition-all duration-200"
                 >
                   Make Another Request
                 </button>
               </div>
             ) : (
-              <div id="mc_embed_signup" className="w-full">
+              <div id="mc_embed_signup" className="w-full mt-2">
+                <div className="w-full flex items-center justify-end mb-4">
+                  <button
+                    type="button"
+                    onClick={() => setShowForm(false)}
+                    className="rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300 transition-all duration-200 p-2"
+                    style={{ minWidth: 0 }}
+                  >
+                    <span className="text-2xl leading-none">←</span>
+                  </button>
+                </div>
                 <form
                   action="https://app.us5.list-manage.com/subscribe/post?u=1fff7104ea848f8b81488b0bc&amp;id=cf04b5f592&amp;f_id=00f8c2e1f0"
                   method="post"
@@ -124,11 +132,10 @@ const BookDemand: React.FC = () => {
                   onSubmit={handleSubmit}
                 >
                   <div id="mc_embed_signup_scroll">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">Request your Book</h2>
-                    <div className="indicates-required mb-4">
+                    <h2 className="text-xl font-bold text-[#7b2ff2] mb-4 text-center">Request your Book</h2>
+                    <div className="indicates-required mb-4 text-center">
                       <span className="asterisk text-red-500">*</span> indicates required
                     </div>
-                    
                     <div className="mc-field-group mb-4">
                       <label htmlFor="mce-EMAIL" className="block text-sm font-medium text-gray-700">
                         Email Address <span className="asterisk text-red-500">*</span>
@@ -136,12 +143,11 @@ const BookDemand: React.FC = () => {
                       <input
                         type="email"
                         name="EMAIL"
-                        className="required email w-full mt-1 block rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        className="required email w-full mt-1 block rounded-md border-gray-300 shadow-sm focus:border-[#7b2ff2] focus:ring-[#7b2ff2]"
                         id="mce-EMAIL"
                         required
                       />
                     </div>
-
                     <div className="mc-field-group mb-4">
                       <label htmlFor="mce-FNAME" className="block text-sm font-medium text-gray-700">
                         First Name <span className="asterisk text-red-500">*</span>
@@ -149,12 +155,11 @@ const BookDemand: React.FC = () => {
                       <input
                         type="text"
                         name="FNAME"
-                        className="required text w-full mt-1 block rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        className="required text w-full mt-1 block rounded-md border-gray-300 shadow-sm focus:border-[#7b2ff2] focus:ring-[#7b2ff2]"
                         id="mce-FNAME"
                         required
                       />
                     </div>
-
                     <div className="mc-field-group mb-4">
                       <label htmlFor="mce-MMERGE7" className="block text-sm font-medium text-gray-700">
                         Book Name <span className="asterisk text-red-500">*</span>
@@ -162,12 +167,11 @@ const BookDemand: React.FC = () => {
                       <input
                         type="text"
                         name="MMERGE7"
-                        className="required text w-full mt-1 block rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        className="required text w-full mt-1 block rounded-md border-gray-300 shadow-sm focus:border-[#7b2ff2] focus:ring-[#7b2ff2]"
                         id="mce-MMERGE7"
                         required
                       />
                     </div>
-
                     <div className="mc-field-group mb-4">
                       <label htmlFor="mce-MMERGE8" className="block text-sm font-medium text-gray-700">
                         Message
@@ -175,35 +179,33 @@ const BookDemand: React.FC = () => {
                       <input
                         type="text"
                         name="MMERGE8"
-                        className="text w-full mt-1 block rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        className="text w-full mt-1 block rounded-md border-gray-300 shadow-sm focus:border-[#7b2ff2] focus:ring-[#7b2ff2]"
                         id="mce-MMERGE8"
                       />
                       <span id="mce-MMERGE8-HELPERTEXT" className="helper_text text-sm text-gray-500 mt-1">
                         Author Name or any extra instructions
                       </span>
                     </div>
-
                     <div id="mce-responses" className="clear foot mb-4">
                       <div className="response" id="mce-error-response" style={{ display: 'none' }}></div>
                       <div className="response" id="mce-success-response" style={{ display: 'none' }}></div>
                     </div>
-
                     <div aria-hidden="true" style={{ position: 'absolute', left: '-5000px' }}>
                       <input
                         type="text"
                         name="b_1fff7104ea848f8b81488b0bc_cf04b5f592"
                         tabIndex={-1}
                         value=""
+                        readOnly
                       />
                     </div>
-
                     <div className="optionalParent">
                       <div className="clear foot">
                         <input
                           type="submit"
                           name="subscribe"
                           id="mc-embedded-subscribe"
-                          className="button w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                          className="button w-full bg-gradient-to-r from-[#7b2ff2] to-[#f357a8] text-white py-3 px-6 rounded-full font-bold hover:from-[#5f1bbd] hover:to-[#d13b8a] transition-all duration-200"
                           value="Submit Request"
                         />
                       </div>
@@ -215,7 +217,6 @@ const BookDemand: React.FC = () => {
           </div>
         </div>
       </div>
-
       <script type="text/javascript" src="//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js"></script>
       <script type="text/javascript">
         {`
