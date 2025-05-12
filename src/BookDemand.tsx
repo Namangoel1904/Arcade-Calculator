@@ -100,6 +100,7 @@ const BookDemand: React.FC = () => {
                   <p className="mt-2 text-green-700">
                     Thank you for your book request. We'll process it and send you the book via email shortly. Payment would be asked only after the book is delivered.
                   </p>
+                  <h4 className="mt-4 text-1xl font-bold text-purple-900">Make sure to check spam box or update box in mail.</h4>
                 </div>
                 <button
                   onClick={() => {
