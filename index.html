@@ -5,7 +5,22 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Google Arcade Points Calculator</title>
-    <script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/1fff7104ea848f8b81488b0bc/43ee633f9db20a9d92785e73d.js");</script>
+    <script>
+  // List of paths where you DON'T want the popup to appear
+  const excludedPaths = ['/books'];
+
+  // If current page is not in the exclusion list, load Mailchimp script
+  if (!excludedPaths.includes(window.location.pathname)) {
+    (function(c, h, i, m, p) {
+      m = c.createElement(h),
+      p = c.getElementsByTagName(h)[0];
+      m.async = 1;
+      m.src = i;
+      p.parentNode.insertBefore(m, p);
+    })(document, "script", "https://chimpstatic.com/mcjs-connected/js/users/1fff7104ea848f8b81488b0bc/43ee633f9db20a9d92785e73d.js");
+  }
+</script>
+
   </head>
   <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-968ERVF9GS"></script>
