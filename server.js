@@ -28,7 +28,7 @@ const GAME_BADGE_KEYWORDS = [
   "Base Camp",
   "Arcade TechCare",
   "Arcade Certification Zone",
-  "Level 3".
+  "Level 3",
   "NetworSkills"
 ];
 
