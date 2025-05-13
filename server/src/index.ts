@@ -213,6 +213,7 @@ function calculatePoints(badges: Badge[]): Points {
           badge.name.toLowerCase().includes('arcade skills resolve') ||
           badge.name.toLowerCase().includes('arcade skillsresolve') ||
           badge.name.toLowerCase().includes('color your skills') ||
+          badge.name.toLowerCase().includes('arcade techcare') ||
           badge.name.toLowerCase().include('NetworSkills')
         ) {
           gamePoints += 2;
