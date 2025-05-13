@@ -40,7 +40,8 @@ const GAME_BADGE_KEYWORDS = [
   "Base Camp",
   "Arcade Certification Zone",
   "Level 3",
-  "NetworSkills"
+  "NetworSkills",
+  "arcade techcare"
 ];
 
 const SKILL_BADGES = [
