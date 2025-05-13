@@ -201,7 +201,7 @@ function calculatePoints(badges) {
           badge.name.toLowerCase().includes('arcade skillsresolve') ||
           badge.name.toLowerCase().includes('color your skills') ||
           badge.name.toLowerCase().includes('arcade techcare') ||
-          badge.name.toLowerCase().include('NetworSkills')
+          badge.name.toLowerCase().includes('NetworSkills')
         ) {
           gamePoints += 2;
         } else {
