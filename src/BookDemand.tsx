@@ -35,6 +35,17 @@ const BookDemand: React.FC = () => {
         <title>Book Demand Service - Affordable Books at ₹19</title>
         <meta name="description" content="Get your required books in PDF format for just ₹19. Fill out the form and receive your book via email." />
         <link href="//cdn-images.mailchimp.com/embedcode/classic-061523.css" rel="stylesheet" type="text/css" />
+        {/* Open Graph Meta Tags for Social Sharing */}
+        <meta property="og:title" content="Books on Demand - Get PDF Books at ₹19" />
+        <meta property="og:description" content="Get your required books in PDF format for just ₹19. Skip the price tag, keep the knowledge!" />
+        <meta property="og:image" content="https://beingnotified.netlify.app/book-banner.jpg" />
+        <meta property="og:url" content="https://beingnotified.netlify.app/books" />
+        <meta property="og:type" content="website" />
+        {/* Twitter Card Meta Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Books on Demand - Get PDF Books at ₹19" />
+        <meta name="twitter:description" content="Get your required books in PDF format for just ₹19. Skip the price tag, keep the knowledge!" />
+        <meta name="twitter:image" content="https://beingnotified.netlify.app/book-banner.jpg" />
       </Helmet>
 
       <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 bg-transparent rounded-3xl shadow-none">
