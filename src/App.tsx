@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import axios from 'axios'
 import pointSystemImage from './Point System.png'
@@ -6,8 +6,8 @@ import SkillBadgeList from './SkillBadgeList'
 import YouTubeContent from './YouTubeContent'
 import JoinUs from './JoinUs'
 import LabFreeCoursesList from './LabFreeCoursesList'
-import AboutUs from './AboutUs'
 import BookDemand from './BookDemand'
+
 // Add custom scrollbar styles
 const scrollbarStyles = `
   .custom-scrollbar::-webkit-scrollbar {
@@ -40,14 +40,19 @@ interface Points {
   gameBadges: number
   triviaBadges: number
   skillBadges: number
+  milestonePoints: number
 }
 
 interface ScrapedData {
   badges: Badge[]
   points: Points
+  milestoneProgress?: {
+    currentMilestone: number
+    progress: number
+  }
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://arcade-calculator-backend.onrender.com'
 
 // Ensure API_BASE_URL has the protocol
 const API_URL = API_BASE_URL.startsWith('http') ? API_BASE_URL : `https://${API_BASE_URL}`
@@ -59,11 +64,17 @@ function PointsCalculator() {
   const [error, setError] = useState('')
   const [showRules, setShowRules] = useState(false)
   const [isFacilitator, setIsFacilitator] = useState(false)
+  const facilitatorRef = useRef(isFacilitator)
   const [showUrlHistory, setShowUrlHistory] = useState(false)
   const [recentUrls, setRecentUrls] = useState<string[]>([])
 
   const START_DATE = new Date('2025-01-08')
   const MILESTONE_START_DATE = new Date('2025-04-01')
+
+  // Update ref when state changes
+  useEffect(() => {
+    facilitatorRef.current = isFacilitator
+  }, [isFacilitator])
 
   // Load recent URLs from localStorage on component mount
   React.useEffect(() => {
@@ -80,7 +91,31 @@ function PointsCalculator() {
     localStorage.setItem('recentProfileUrls', JSON.stringify(updatedUrls))
   }
 
-  const calculatePoints = async () => {
+  // Function to update points immediately
+  const updatePointsImmediately = (isFacilitator: boolean) => {
+    if (scrapedData) {
+      const updatedData = { ...scrapedData }
+      if (isFacilitator) {
+        // Add milestone points immediately
+        const milestonePoints = 8 // Default to Milestone 2 points
+        updatedData.points = {
+          ...updatedData.points,
+          milestonePoints,
+          total: updatedData.points.gameBadges + updatedData.points.triviaBadges + updatedData.points.skillBadges + milestonePoints
+        }
+      } else {
+        // Remove milestone points immediately
+        updatedData.points = {
+          ...updatedData.points,
+          milestonePoints: 0,
+          total: updatedData.points.gameBadges + updatedData.points.triviaBadges + updatedData.points.skillBadges
+        }
+      }
+      setScrapedData(updatedData)
+    }
+  }
+
+  const calculatePoints = async (currentFacilitatorStatus: boolean) => {
     if (!profileUrl) {
       setError('Please enter a profile URL')
       return
@@ -92,18 +127,21 @@ function PointsCalculator() {
       const apiUrl = `${API_URL}/api/calculate-points`
       console.log('Making request to:', apiUrl)
       console.log('With profile URL:', profileUrl)
+      console.log('Is Facilitator:', currentFacilitatorStatus)
       console.log('API_URL value:', API_URL)
       
       const response = await axios.get(apiUrl, {
-        params: { profileUrl },
+        params: { profileUrl, isFacilitator: currentFacilitatorStatus.toString() },
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         }
       })
       console.log('Response received:', response.data)
+      console.log('Milestone Points:', response.data.points.milestonePoints)
+      console.log('Total Points:', response.data.points.total)
       setScrapedData(response.data)
-      saveUrlToHistory(profileUrl) // Save URL after successful calculation
+      saveUrlToHistory(profileUrl)
     } catch (err: any) {
       console.error('Error calculating points:', err)
       console.error('Error details:', {
@@ -172,7 +210,7 @@ function PointsCalculator() {
                   )}
                 </div>
                 <button
-                  onClick={calculatePoints}
+                  onClick={() => calculatePoints(isFacilitator)}
                   disabled={loading || !profileUrl}
                   className="w-full sm:w-auto px-6 py-3 sm:py-2 bg-google-blue text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-google-blue focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                 >
@@ -222,7 +260,18 @@ function PointsCalculator() {
                 type="checkbox"
                 id="facilitator"
                 checked={isFacilitator}
-                onChange={(e) => setIsFacilitator(e.target.checked)}
+                onChange={(e) => {
+                  const newValue = e.target.checked
+                  console.log('Facilitator checkbox changed:', newValue)
+                  setIsFacilitator(newValue)
+                  // Update points immediately
+                  updatePointsImmediately(newValue)
+                  // Then sync with backend using the current value
+                  if (profileUrl) {
+                    console.log('Syncing with backend for facilitator:', newValue)
+                    calculatePoints(newValue)
+                  }
+                }}
                 className="h-4 w-4 text-google-blue focus:ring-google-blue border-gray-300 rounded cursor-pointer"
               />
               <label htmlFor="facilitator" className="text-xs sm:text-sm font-medium text-gray-700 cursor-pointer">
@@ -268,6 +317,15 @@ function PointsCalculator() {
                           <p className="text-base text-gray-600">Points from Skill Badges</p>
                           <p className="text-3xl font-bold text-google-red">{scrapedData?.points?.skillBadges || 0}</p>
                         </div>
+                        {isFacilitator && scrapedData?.points?.milestonePoints > 0 && (
+                          <div className="bg-gray-50 p-4 rounded-lg">
+                            <p className="text-base text-gray-600">Points from Milestone {scrapedData?.milestoneProgress?.currentMilestone}</p>
+                            <p className="text-3xl font-bold text-purple-600">{scrapedData?.points?.milestonePoints || 0}</p>
+                            <p className="text-sm text-gray-500 mt-1">
+                              Progress: {scrapedData?.milestoneProgress?.progress}%
+                            </p>
+                          </div>
+                        )}
                       </div>
 
                       {/* Detailed Points Breakdown */}
@@ -834,7 +892,7 @@ function App() {
                 className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Books On Demand
+                Book Service
               </Link>
             </div>
           </nav>
@@ -908,7 +966,6 @@ function App() {
           <Route path="/lab-free-courses" element={<LabFreeCoursesList />} />
           <Route path="/youtube" element={<YouTubeContent />} />
           <Route path="/join-us" element={<JoinUs />} />
-          <Route path="/about" element={<AboutUs />} />
           <Route path="/books" element={<BookDemand />} />
         </Routes>
       </div>
