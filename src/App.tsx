@@ -64,17 +64,11 @@ function PointsCalculator() {
   const [error, setError] = useState('')
   const [showRules, setShowRules] = useState(false)
   const [isFacilitator, setIsFacilitator] = useState(false)
-  const facilitatorRef = useRef(isFacilitator)
   const [showUrlHistory, setShowUrlHistory] = useState(false)
   const [recentUrls, setRecentUrls] = useState<string[]>([])
 
   const START_DATE = new Date('2025-01-08')
   const MILESTONE_START_DATE = new Date('2025-04-01')
-
-  // Update ref when state changes
-  useEffect(() => {
-    facilitatorRef.current = isFacilitator
-  }, [isFacilitator])
 
   // Load recent URLs from localStorage on component mount
   React.useEffect(() => {
@@ -103,6 +97,10 @@ function PointsCalculator() {
           milestonePoints,
           total: updatedData.points.gameBadges + updatedData.points.triviaBadges + updatedData.points.skillBadges + milestonePoints
         }
+        updatedData.milestoneProgress = {
+          currentMilestone: 2,
+          progress: 50
+        }
       } else {
         // Remove milestone points immediately
         updatedData.points = {
@@ -110,6 +108,7 @@ function PointsCalculator() {
           milestonePoints: 0,
           total: updatedData.points.gameBadges + updatedData.points.triviaBadges + updatedData.points.skillBadges
         }
+        updatedData.milestoneProgress = undefined
       }
       setScrapedData(updatedData)
     }
@@ -140,7 +139,11 @@ function PointsCalculator() {
       console.log('Response received:', response.data)
       console.log('Milestone Points:', response.data.points.milestonePoints)
       console.log('Total Points:', response.data.points.total)
-      setScrapedData(response.data)
+      
+      // Only update if the facilitator status matches
+      if (currentFacilitatorStatus === isFacilitator) {
+        setScrapedData(response.data)
+      }
       saveUrlToHistory(profileUrl)
     } catch (err: any) {
       console.error('Error calculating points:', err)
@@ -892,7 +895,7 @@ function App() {
                 className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Books On Demand
+                Book Service
               </Link>
             </div>
           </nav>
