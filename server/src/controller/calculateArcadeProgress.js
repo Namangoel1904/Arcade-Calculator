@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { toFormData } from "axios";
 import * as cheerio from "cheerio";
 import badges from "../utils/badges.js";
 
@@ -108,6 +108,11 @@ const badgeProcessingLogic = (badges) => {
     let faciTrivia = 0;
     let faciSkill = 0;
     let faciLabfree = 0;
+
+    let totalGameBadges = 0;
+    let totalTriviaBadges = 0;
+    let totalSkillBadges = 0;
+
     const AnalyzedBadges = []
 
 
@@ -131,6 +136,7 @@ const badgeProcessingLogic = (badges) => {
             }
             const temp = { badgeName: badge.title, badgeImage: badge.imageURL, badgeEarnedOn: badge.dateEarned, badgeType: "Skill", badgePoint: 0.5 }
             AnalyzedBadges.push(temp)
+            totalSkillBadges++;
 
         }
 
@@ -146,6 +152,7 @@ const badgeProcessingLogic = (badges) => {
 
                 const temp = { badgeName: badge.title, badgeImage: badge.imageURL, badgeEarnedOn: badge.dateEarned, badgeType: "Trivia", badgePoint: 1 }
                 AnalyzedBadges.push(temp)
+                totalTriviaBadges++;
             }
 
             else if (badge.title.includes("Skills Boost") || badge.title.includes("Level")) {
@@ -157,6 +164,7 @@ const badgeProcessingLogic = (badges) => {
 
                 const temp = { badgeName: badge.title, badgeImage: badge.imageURL, badgeEarnedOn: badge.dateEarned, badgeType: "Game", badgePoint: 1 }
                 AnalyzedBadges.push(temp)
+                totalGameBadges++;
             }
 
             // now comes the special badge
@@ -168,6 +176,7 @@ const badgeProcessingLogic = (badges) => {
 
                 const temp = { badgeName: badge.title, badgeImage: badge.imageURL, badgeEarnedOn: badge.dateEarned, badgeType: "Game", badgePoint: 2 }
                 AnalyzedBadges.push(temp)
+                totalGameBadges++;
             }
         } else {
             const temp = { badgeName: badge.title, badgeImage: badge.imageURL, badgeEarnedOn: badge.dateEarned, badgeType: "Unknown", badgePoint: 0 }
@@ -176,19 +185,22 @@ const badgeProcessingLogic = (badges) => {
     });
 
     const faciEarned = { faciGame, faciTrivia, faciSkill, faciLabfree }
+    const arcadeBadgesCount = { totalGameBadges, totalSkillBadges, totalTriviaBadges }
+    const faciBadgesCount = { faciGame, faciSkill, faciTrivia, faciLabfree }
     bonusPoints = calculate_GCAF_BonusPoints(faciEarned)
-    return { arcadePoints, bonusPoints, AnalyzedBadges }
+    return { arcadePoints, bonusPoints, AnalyzedBadges, arcadeBadgesCount, faciBadgesCount }
 };
 
 export default async function arcadePointsCalculator(url) {
     try {
         const { userDetails, badges } = await scrapWebPage(url); // returns all the badges from the 
-        const { arcadePoints, bonusPoints, AnalyzedBadges } = badgeProcessingLogic(badges);
+        const { arcadePoints, bonusPoints, AnalyzedBadges, arcadeBadgesCount, faciBadgesCount } = badgeProcessingLogic(badges);
 
         return {
             success: true, message: null, data: {
                 userDetails,
                 arcadePoints: arcadePoints,
+                arcadeBadgesCount, faciBadgesCount,
                 bonusPoints: bonusPoints,
                 totalPoints: arcadePoints + bonusPoints,
                 NF_SwagsTier: milestoneReached(arcadePoints), // NF = Non Facilitator
