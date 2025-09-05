@@ -15,7 +15,7 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-const START_DATE = new Date('2025-01-08');
+const START_DATE = new Date('2025-07-01');
 
 // Game badge keywords
 const GAME_BADGE_KEYWORDS = [
@@ -23,6 +23,10 @@ const GAME_BADGE_KEYWORDS = [
   "Arcade Skills Resolve",
   "Arcade Skillsresolve",
   "Color Your Skills",
+  "Arcade FutureReady Skills August",
+  "Future Ready Skills",
+  "FutureReady Skills",
+  "ExtraSkillestrial!",
   "Level 1",
   "Level 2",
   "Base Camp",
@@ -122,7 +126,10 @@ const SKILL_BADGES = [
   "Classify Images with TensorFlow on Google Cloud",
   "Get Started with Google Workspace Tools",
   "Use Machine Learning APIs on Google Cloud",
-  "Prepare Data for ML APIs on Google Cloud"
+  "Prepare Data for ML APIs on Google Cloud",
+  "Implementing Cloud Load Balancing for Compute Engine",
+  "Privileged Access with IAM",
+  "Enhance Gemini Model Capabilities"
 ];
 
 const LAB_FREE_BADGES = [
@@ -143,7 +150,14 @@ const LAB_FREE_BADGES = [
   "Google Sheets",
   "Google Slides",
   "Google Meet",
-  "Google Calendar"
+  "Google Calendar",
+  "Gen AI: Beyond the Chatbot",
+  "Gen AI: Unlock Foundational Concepts",
+  "Gen AI: Navigate the Landscape",
+  "Gen AI Apps: Transform Your Work",
+  "Introduction to Large Language Models",
+  "Gen AI Agents: Transform Your Organization",
+  "AI Infrastructure: Introduction to AI Hypercomputer"
 ];
 
 function determineBadgeType(badgeName) {
@@ -200,6 +214,10 @@ function calculatePoints(badges) {
           badge.name.toLowerCase().includes('arcade skills resolve') ||
           badge.name.toLowerCase().includes('arcade skillsresolve') ||
           badge.name.toLowerCase().includes('color your skills') ||
+          badge.name.toLowerCase().includes('arcade futureready skills august') ||
+          badge.name.toLowerCase().includes('future ready skills') ||
+          badge.name.toLowerCase().includes('futureready skills') ||
+          badge.name.toLowerCase().includes('extraskillestrial!') ||
           badge.name.toLowerCase().includes('arcade techcare') ||
           badge.name.toLowerCase().includes('NetworSkills')
         ) {

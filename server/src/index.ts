@@ -37,7 +37,7 @@ interface ScrapedData {
   };
 }
 
-const START_DATE = new Date('2025-01-08');
+const START_DATE = new Date('2025-07-01');
 
 // Game badge keywords
 const GAME_BADGE_KEYWORDS = [
@@ -45,6 +45,10 @@ const GAME_BADGE_KEYWORDS = [
   "Arcade Skills Resolve",
   "Arcade Skillsresolve",
   "Color Your Skills",
+  "Arcade FutureReady Skills August",
+  "Future Ready Skills",
+  "FutureReady Skills",
+  "ExtraSkillestrial!",
   "Level 1",
   "Level 2",
   "Base Camp",
@@ -144,7 +148,10 @@ const SKILL_BADGES = [
   "Classify Images with TensorFlow on Google Cloud",
   "Get Started with Google Workspace Tools",
   "Use Machine Learning APIs on Google Cloud",
-  "Prepare Data for ML APIs on Google Cloud"
+  "Prepare Data for ML APIs on Google Cloud",
+  "Implementing Cloud Load Balancing for Compute Engine",
+  "Privileged Access with IAM",
+  "Enhance Gemini Model Capabilities"
 ];
 
 const LAB_FREE_BADGES = [
@@ -165,7 +172,14 @@ const LAB_FREE_BADGES = [
   "Google Sheets",
   "Google Slides",
   "Google Meet",
-  "Google Calendar"
+  "Google Calendar",
+  "Gen AI: Beyond the Chatbot",
+  "Gen AI: Unlock Foundational Concepts",
+  "Gen AI: Navigate the Landscape",
+  "Gen AI Apps: Transform Your Work",
+  "Introduction to Large Language Models",
+  "Gen AI Agents: Transform Your Organization",
+  "AI Infrastructure: Introduction to AI Hypercomputer"
 ];
 
 type BadgeType = 'game' | 'trivia' | 'skill' | 'completion' | 'lab-free';
@@ -224,6 +238,10 @@ function calculatePoints(badges: Badge[]): Points {
           badge.name.toLowerCase().includes('arcade skills resolve') ||
           badge.name.toLowerCase().includes('arcade skillsresolve') ||
           badge.name.toLowerCase().includes('color your skills') ||
+          badge.name.toLowerCase().includes('arcade futureready skills august') ||
+          badge.name.toLowerCase().includes('future ready skills') ||
+          badge.name.toLowerCase().includes('futureready skills') ||
+          badge.name.toLowerCase().includes('extraskillestrial!') ||
           badge.name.toLowerCase().includes('arcade networskills') ||
           badge.name.toLowerCase().includes('arcade techcare')
         ) {
@@ -322,6 +340,11 @@ app.get('/api/calculate-points', async (req, res) => {
 
     console.log('Total badges found:', badges.length);
 
+    // Debug: show START_DATE and how many badges qualify for points
+    const recentForPoints = badges.filter(b => new Date(b.earnedDate) >= START_DATE);
+    console.log('Points START_DATE:', START_DATE.toISOString());
+    console.log('Badges considered for points:', recentForPoints.length);
+
     // Calculate points and get the breakdown
     const points = calculatePoints(badges);
     console.log('Initial points calculation:', points);
@@ -330,8 +353,8 @@ app.get('/api/calculate-points', async (req, res) => {
     if (isFacilitator === 'true') {
       console.log('Calculating milestone points for facilitator');
       
-      // Filter badges earned after April 1st, 2025 for milestone calculation
-      const milestoneBadges = badges.filter(badge => new Date(badge.earnedDate) >= new Date('2025-04-01'));
+      // Filter badges earned after August 2nd, 2025 for milestone calculation
+      const milestoneBadges = badges.filter(badge => new Date(badge.earnedDate) >= new Date('2025-08-02'));
       console.log('Milestone badges count:', milestoneBadges.length);
       
       // Count badges by type
@@ -347,27 +370,28 @@ app.get('/api/calculate-points', async (req, res) => {
         labFree: labFreeBadgeCount
       });
 
+
       // Calculate progress based on milestone requirements
       let currentMilestone = 0;
       let progress = 0;
 
-      // Check Milestone 4 (100%)
-      if (gameBadgeCount >= 10 && triviaBadgeCount >= 8 && skillBadgeCount >= 44 && labFreeBadgeCount >= 16) {
+      // Check Milestone 4 (100%) - 12 Arcade Games, 8 Trivia & 52 Skill Badges + Any 24 Lab-free courses
+      if (gameBadgeCount >= 12 && triviaBadgeCount >= 8 && skillBadgeCount >= 52 && labFreeBadgeCount >= 24) {
         currentMilestone = 4;
         progress = 100;
       }
-      // Check Milestone 3 (75%)
-      else if (gameBadgeCount >= 8 && triviaBadgeCount >= 7 && skillBadgeCount >= 30 && labFreeBadgeCount >= 12) {
+      // Check Milestone 3 (75%) - 10 Arcade Games, 7 Trivia & 38 Skill Badges + Any 18 Lab-free courses
+      else if (gameBadgeCount >= 10 && triviaBadgeCount >= 7 && skillBadgeCount >= 38 && labFreeBadgeCount >= 18) {
         currentMilestone = 3;
         progress = 75;
       }
-      // Check Milestone 2 (50%)
-      else if (gameBadgeCount >= 6 && triviaBadgeCount >= 6 && skillBadgeCount >= 20 && labFreeBadgeCount >= 8) {
+      // Check Milestone 2 (50%) - 8 Arcade Games, 6 Trivia & 28 Skill Badges + Any 12 Lab-free courses
+      else if (gameBadgeCount >= 8 && triviaBadgeCount >= 6 && skillBadgeCount >= 28 && labFreeBadgeCount >= 12) {
         currentMilestone = 2;
         progress = 50;
       }
-      // Check Milestone 1 (25%)
-      else if (gameBadgeCount >= 4 && triviaBadgeCount >= 4 && skillBadgeCount >= 10 && labFreeBadgeCount >= 4) {
+      // Check Milestone 1 (25%) - 6 Arcade Games, 5 Trivia & 14 Skill Badges + Any 6 Lab-free courses
+      else if (gameBadgeCount >= 6 && triviaBadgeCount >= 5 && skillBadgeCount >= 14 && labFreeBadgeCount >= 6) {
         currentMilestone = 1;
         progress = 25;
       }

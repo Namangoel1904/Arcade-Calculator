@@ -52,10 +52,7 @@ interface ScrapedData {
   }
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://arcade-calculator-backend.onrender.com'
-
-// Ensure API_BASE_URL has the protocol
-const API_URL = API_BASE_URL.startsWith('http') ? API_BASE_URL : `https://${API_BASE_URL}`
+const API_URL = 'https://your-droplet-ip:3001'  // Replace with your actual droplet IP
 
 function PointsCalculator() {
   const [profileUrl, setProfileUrl] = useState('')
@@ -67,8 +64,8 @@ function PointsCalculator() {
   const [showUrlHistory, setShowUrlHistory] = useState(false)
   const [recentUrls, setRecentUrls] = useState<string[]>([])
 
-  const START_DATE = new Date('2025-01-08')
-  const MILESTONE_START_DATE = new Date('2025-04-01')
+  const START_DATE = new Date('2025-07-01')
+  const MILESTONE_START_DATE = new Date('2025-08-02')
 
   // Load recent URLs from localStorage on component mount
   React.useEffect(() => {
@@ -90,16 +87,11 @@ function PointsCalculator() {
     if (scrapedData) {
       const updatedData = { ...scrapedData }
       if (isFacilitator) {
-        // Add milestone points immediately
-        const milestonePoints = 8 // Default to Milestone 2 points
-        updatedData.points = {
-          ...updatedData.points,
-          milestonePoints,
-          total: updatedData.points.gameBadges + updatedData.points.triviaBadges + updatedData.points.skillBadges + milestonePoints
-        }
+        // Don't add milestone points immediately - wait for backend calculation
+        // Just show the facilitator UI state
         updatedData.milestoneProgress = {
-          currentMilestone: 2,
-          progress: 50
+          currentMilestone: 0,
+          progress: 0
         }
       } else {
         // Remove milestone points immediately
@@ -140,10 +132,8 @@ function PointsCalculator() {
       console.log('Milestone Points:', response.data.points.milestonePoints)
       console.log('Total Points:', response.data.points.total)
       
-      // Only update if the facilitator status matches
-      if (currentFacilitatorStatus === isFacilitator) {
-        setScrapedData(response.data)
-      }
+      // Always update the data with the response
+      setScrapedData(response.data)
       saveUrlToHistory(profileUrl)
     } catch (err: any) {
       console.error('Error calculating points:', err)
@@ -158,14 +148,14 @@ function PointsCalculator() {
     }
   }
 
-  // Filter badges earned after January 8th, 2025
+  // Filter badges earned after July 1st, 2025
   const recentBadges = scrapedData?.badges?.filter(badge => {
     if (!badge?.earnedDate) return false;
     const earnedDate = new Date(badge.earnedDate);
     return earnedDate.getTime() >= START_DATE.getTime();
   }) || [];
 
-  // Filter badges for milestone progress (after April 1st, 2025)
+  // Filter badges for milestone progress (after August 2nd, 2025)
   const milestoneBadges = scrapedData?.badges?.filter(badge => {
     if (!badge?.earnedDate) return false;
     const earnedDate = new Date(badge.earnedDate);
@@ -267,12 +257,13 @@ function PointsCalculator() {
                   const newValue = e.target.checked
                   console.log('Facilitator checkbox changed:', newValue)
                   setIsFacilitator(newValue)
-                  // Update points immediately
-                  updatePointsImmediately(newValue)
-                  // Then sync with backend using the current value
+                  // Always recalculate with backend when facilitator status changes
                   if (profileUrl) {
                     console.log('Syncing with backend for facilitator:', newValue)
                     calculatePoints(newValue)
+                  } else {
+                    // If no profile URL, just update the UI state
+                    updatePointsImmediately(newValue)
                   }
                 }}
                 className="h-4 w-4 text-google-blue focus:ring-google-blue border-gray-300 rounded cursor-pointer"
@@ -341,6 +332,8 @@ function PointsCalculator() {
                               <li>Love Beyond: 2 points</li>
                               <li>Arcade Skills Resolve: 2 points</li>
                               <li>Color Your Skills: 2 points</li>
+                              <li>Arcade FutureReady Skills August: 2 points</li>
+                              <li>ExtraSkillestrial!: 2 points</li>
                               <li>Arcade TechCare: 2 points</li>
                               <li>Other Game Badges: 1 point each</li>
                             </ul>
@@ -358,7 +351,7 @@ function PointsCalculator() {
                             </ul>
                           </div>
                           <div className="text-base text-gray-500 italic">
-                            Note: Only badges earned after January 8, 2025 are counted
+                            Note: Only badges earned after July 1st, 2025 are counted
                           </div>
                         </div>
                       </div>
@@ -367,7 +360,7 @@ function PointsCalculator() {
                     {/* Recent Badges Section - Hidden on mobile, visible on desktop */}
                     <div className="hidden lg:block">
                       <h2 className="text-xl sm:text-3xl font-semibold text-gray-900 mb-6">
-                        Badges Earned After Jan 8, 2025
+                        Badges Earned After July 1st, 2025
                       </h2>
                       <div className="space-y-4 max-h-[600px] overflow-y-auto pr-4 custom-scrollbar">
                         {recentBadges?.map((badge, index) => (
@@ -419,45 +412,45 @@ function PointsCalculator() {
                         <ul className="list-disc list-inside text-base text-gray-700 space-y-2">
                           <li>Current Points: {scrapedData?.points?.total || 0}</li>
                           <li>Badges Earned: {recentBadges?.length || 0}</li>
-                          <li>Active Since: Jan 8, 2025</li>
+                          <li>Active Since: July 1st, 2025</li>
                         </ul>
                       </div>
                       
                       <div className="bg-white rounded-lg p-4">
                         <h3 className="text-xl font-medium text-blue-900 mb-4">Reward Tiers</h3>
                         <div className="space-y-4">
-                          {/* Tier 1 */}
+                          {/* Novice */}
                           <div>
                             <div className="flex justify-between text-sm text-blue-800 mb-1">
-                              <span className="font-medium">Tier 1</span>
-                              <span>{Math.min(scrapedData?.points?.total || 0, 20)}/20 Points</span>
+                              <span className="font-medium">Novice</span>
+                              <span>{Math.min(scrapedData?.points?.total || 0, 25)}/25 Points</span>
                             </div>
                             <div className="h-2 bg-blue-100 rounded-full overflow-hidden">
                               <div 
                                 className="h-full bg-blue-500 rounded-full transition-all duration-500"
-                                style={{ width: `${Math.min(((scrapedData?.points?.total || 0) / 20) * 100, 100)}%` }}
+                                style={{ width: `${Math.min(((scrapedData?.points?.total || 0) / 25) * 100, 100)}%` }}
                               ></div>
                             </div>
                           </div>
 
-                          {/* Tier 2 */}
+                          {/* Trooper */}
                           <div>
                             <div className="flex justify-between text-sm text-purple-800 mb-1">
-                              <span className="font-medium">Tier 2</span>
-                              <span>{Math.min(scrapedData?.points?.total || 0, 40)}/40 Points</span>
+                              <span className="font-medium">Trooper</span>
+                              <span>{Math.min(scrapedData?.points?.total || 0, 45)}/45 Points</span>
                             </div>
                             <div className="h-2 bg-purple-100 rounded-full overflow-hidden">
                               <div 
                                 className="h-full bg-purple-500 rounded-full transition-all duration-500"
-                                style={{ width: `${Math.min(((scrapedData?.points?.total || 0) / 40) * 100, 100)}%` }}
+                                style={{ width: `${Math.min(((scrapedData?.points?.total || 0) / 45) * 100, 100)}%` }}
                               ></div>
                             </div>
                           </div>
 
-                          {/* Tier 3 */}
+                          {/* Ranger */}
                           <div>
                             <div className="flex justify-between text-sm text-indigo-800 mb-1">
-                              <span className="font-medium">Tier 3</span>
+                              <span className="font-medium">Ranger</span>
                               <span>{Math.min(scrapedData?.points?.total || 0, 65)}/65 Points</span>
                             </div>
                             <div className="h-2 bg-indigo-100 rounded-full overflow-hidden">
@@ -468,10 +461,10 @@ function PointsCalculator() {
                             </div>
                           </div>
 
-                          {/* Tier 4 */}
+                          {/* Champion */}
                           <div>
                             <div className="flex justify-between text-sm text-pink-800 mb-1">
-                              <span className="font-medium">Tier 4</span>
+                              <span className="font-medium">Champion</span>
                               <span>{Math.min(scrapedData?.points?.total || 0, 75)}/75 Points</span>
                             </div>
                             <div className="h-2 bg-pink-100 rounded-full overflow-hidden">
@@ -482,16 +475,16 @@ function PointsCalculator() {
                             </div>
                           </div>
 
-                          {/* Tier 5 */}
+                          {/* Legend */}
                           <div>
                             <div className="flex justify-between text-sm text-rose-800 mb-1">
-                              <span className="font-medium">Tier 5</span>
-                              <span>{Math.min(scrapedData?.points?.total || 0, 85)}/85 Points</span>
+                              <span className="font-medium">Legend</span>
+                              <span>{Math.min(scrapedData?.points?.total || 0, 95)}/95 Points</span>
                             </div>
                             <div className="h-2 bg-rose-100 rounded-full overflow-hidden">
                               <div 
                                 className="h-full bg-rose-500 rounded-full transition-all duration-500"
-                                style={{ width: `${Math.min(((scrapedData?.points?.total || 0) / 85) * 100, 100)}%` }}
+                                style={{ width: `${Math.min(((scrapedData?.points?.total || 0) / 95) * 100, 100)}%` }}
                               ></div>
                             </div>
                           </div>
@@ -501,21 +494,21 @@ function PointsCalculator() {
                         <div className="mt-4 pt-4 border-t border-gray-200">
                           <p className="text-sm text-gray-600">
                             Current Tier: {
-                              (scrapedData?.points?.total || 0) >= 85 ? 'Tier 5' :
-                              (scrapedData?.points?.total || 0) >= 75 ? 'Tier 4' :
-                              (scrapedData?.points?.total || 0) >= 65 ? 'Tier 3' :
-                              (scrapedData?.points?.total || 0) >= 40 ? 'Tier 2' :
-                              (scrapedData?.points?.total || 0) >= 20 ? 'Tier 1' :
+                              (scrapedData?.points?.total || 0) >= 95 ? 'Legend' :
+                              (scrapedData?.points?.total || 0) >= 75 ? 'Champion' :
+                              (scrapedData?.points?.total || 0) >= 65 ? 'Ranger' :
+                              (scrapedData?.points?.total || 0) >= 45 ? 'Trooper' :
+                              (scrapedData?.points?.total || 0) >= 25 ? 'Novice' :
                               'Not Tiered'
                             }
                           </p>
-                          {(scrapedData?.points?.total || 0) < 85 && (
+                          {(scrapedData?.points?.total || 0) < 95 && (
                             <p className="text-xs text-gray-500 mt-1">
-                              {(scrapedData?.points?.total || 0) >= 75 ? `${85 - (scrapedData?.points?.total || 0)} points to Tier 5` :
-                               (scrapedData?.points?.total || 0) >= 65 ? `${75 - (scrapedData?.points?.total || 0)} points to Tier 4` :
-                               (scrapedData?.points?.total || 0) >= 40 ? `${65 - (scrapedData?.points?.total || 0)} points to Tier 3` :
-                               (scrapedData?.points?.total || 0) >= 20 ? `${40 - (scrapedData?.points?.total || 0)} points to Tier 2` :
-                               `${20 - (scrapedData?.points?.total || 0)} points to Tier 1`}
+                              {(scrapedData?.points?.total || 0) >= 75 ? `${95 - (scrapedData?.points?.total || 0)} points to Legend` :
+                               (scrapedData?.points?.total || 0) >= 65 ? `${75 - (scrapedData?.points?.total || 0)} points to Champion` :
+                               (scrapedData?.points?.total || 0) >= 45 ? `${65 - (scrapedData?.points?.total || 0)} points to Ranger` :
+                               (scrapedData?.points?.total || 0) >= 25 ? `${45 - (scrapedData?.points?.total || 0)} points to Trooper` :
+                               `${25 - (scrapedData?.points?.total || 0)} points to Novice`}
                             </p>
                           )}
                         </div>
@@ -544,49 +537,49 @@ function PointsCalculator() {
                       <div className="space-y-3">
                         <div>
                           <div className="flex justify-between text-sm text-blue-800 mb-1">
-                            <span>Game Badges (4)</span>
-                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'game').length || 0, 4)}/4</span>
+                            <span>Game Badges (6)</span>
+                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'game').length || 0, 6)}/6</span>
                           </div>
                           <div className="h-2 bg-blue-100 rounded-full overflow-hidden">
                             <div 
                               className="h-full bg-blue-500 rounded-full transition-all duration-500"
-                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'game').length || 0) / 4 * 100, 100)}%` }}
+                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'game').length || 0) / 6 * 100, 100)}%` }}
                             ></div>
                           </div>
                         </div>
                         <div>
                           <div className="flex justify-between text-sm text-blue-800 mb-1">
-                            <span>Trivia Badges (4)</span>
-                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'trivia').length || 0, 4)}/4</span>
+                            <span>Trivia Badges (5)</span>
+                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'trivia').length || 0, 5)}/5</span>
                           </div>
                           <div className="h-2 bg-blue-100 rounded-full overflow-hidden">
                             <div 
                               className="h-full bg-blue-500 rounded-full transition-all duration-500"
-                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'trivia').length || 0) / 4 * 100, 100)}%` }}
+                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'trivia').length || 0) / 5 * 100, 100)}%` }}
                             ></div>
                           </div>
                         </div>
                         <div>
                           <div className="flex justify-between text-sm text-blue-800 mb-1">
-                            <span>Skill Badges (10)</span>
-                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'skill').length || 0, 10)}/10</span>
+                            <span>Skill Badges (14)</span>
+                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'skill').length || 0, 14)}/14</span>
                           </div>
                           <div className="h-2 bg-blue-100 rounded-full overflow-hidden">
                             <div 
                               className="h-full bg-blue-500 rounded-full transition-all duration-500"
-                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'skill').length || 0) / 10 * 100, 100)}%` }}
+                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'skill').length || 0) / 14 * 100, 100)}%` }}
                             ></div>
                           </div>
                         </div>
                         <div>
                           <div className="flex justify-between text-sm text-blue-800 mb-1">
-                            <span>Lab-free Courses (4)</span>
-                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'lab-free').length || 0, 4)}/4</span>
+                            <span>Lab-free Courses (6)</span>
+                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'lab-free').length || 0, 6)}/6</span>
                           </div>
                           <div className="h-2 bg-blue-100 rounded-full overflow-hidden">
                             <div 
                               className="h-full bg-blue-500 rounded-full transition-all duration-500"
-                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'lab-free').length || 0) / 4 * 100, 100)}%`   }}
+                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'lab-free').length || 0) / 6 * 100, 100)}%`   }}
                             ></div>
                           </div>
                         </div>
@@ -605,13 +598,13 @@ function PointsCalculator() {
                       <div className="space-y-3">
                         <div>
                           <div className="flex justify-between text-sm text-purple-800 mb-1">
-                            <span>Game Badges (6)</span>
-                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'game').length || 0, 6)}/6</span>
+                            <span>Game Badges (8)</span>
+                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'game').length || 0, 8)}/8</span>
                           </div>
                           <div className="h-2 bg-purple-100 rounded-full overflow-hidden">
                             <div 
                               className="h-full bg-purple-500 rounded-full transition-all duration-500"
-                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'game').length || 0) / 6 * 100, 100)}%` }}
+                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'game').length || 0) / 8 * 100, 100)}%` }}
                             ></div>
                           </div>
                         </div>
@@ -629,25 +622,25 @@ function PointsCalculator() {
                         </div>
                         <div>
                           <div className="flex justify-between text-sm text-purple-800 mb-1">
-                            <span>Skill Badges (20)</span>
-                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'skill').length || 0, 20)}/20</span>
+                            <span>Skill Badges (28)</span>
+                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'skill').length || 0, 28)}/28</span>
                           </div>
                           <div className="h-2 bg-purple-100 rounded-full overflow-hidden">
                             <div 
                               className="h-full bg-purple-500 rounded-full transition-all duration-500"
-                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'skill').length || 0) / 20 * 100, 100)}%` }}
+                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'skill').length || 0) / 28 * 100, 100)}%` }}
                             ></div>
                           </div>
                         </div>
                         <div>
                           <div className="flex justify-between text-sm text-purple-800 mb-1">
-                            <span>Lab-free Courses (8)</span>
-                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'lab-free').length || 0, 8)}/8</span>
+                            <span>Lab-free Courses (12)</span>
+                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'lab-free').length || 0, 12)}/12</span>
                           </div>
                           <div className="h-2 bg-purple-100 rounded-full overflow-hidden">
                             <div 
                               className="h-full bg-purple-500 rounded-full transition-all duration-500"
-                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'lab-free').length || 0) / 8 * 100, 100)}%`  }}
+                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'lab-free').length || 0) / 12 * 100, 100)}%`  }}
                             ></div>
                           </div>
                         </div>
@@ -666,13 +659,13 @@ function PointsCalculator() {
                       <div className="space-y-3">
                         <div>
                           <div className="flex justify-between text-sm text-indigo-800 mb-1">
-                            <span>Game Badges (8)</span>
-                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'game').length || 0, 8)}/8</span>
+                            <span>Game Badges (10)</span>
+                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'game').length || 0, 10)}/10</span>
                           </div>
                           <div className="h-2 bg-indigo-100 rounded-full overflow-hidden">
                             <div 
                               className="h-full bg-indigo-500 rounded-full transition-all duration-500"
-                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'game').length || 0) / 8 * 100, 100)}%` }}
+                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'game').length || 0) / 10 * 100, 100)}%` }}
                             ></div>
                           </div>
                         </div>
@@ -690,25 +683,25 @@ function PointsCalculator() {
                         </div>
                         <div>
                           <div className="flex justify-between text-sm text-indigo-800 mb-1">
-                            <span>Skill Badges (30)</span>
-                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'skill').length || 0, 30)}/30</span>
+                            <span>Skill Badges (38)</span>
+                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'skill').length || 0, 38)}/38</span>
                           </div>
                           <div className="h-2 bg-indigo-100 rounded-full overflow-hidden">
                             <div 
                               className="h-full bg-indigo-500 rounded-full transition-all duration-500"
-                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'skill').length || 0) / 30 * 100, 100)}%` }}
+                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'skill').length || 0) / 38 * 100, 100)}%` }}
                             ></div>
                           </div>
                         </div>
                         <div>
                           <div className="flex justify-between text-sm text-indigo-800 mb-1">
-                            <span>Lab-free Courses (12)</span>
-                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'lab-free').length || 0, 12)}/12</span>
+                            <span>Lab-free Courses (18)</span>
+                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'lab-free').length || 0, 18)}/18</span>
                           </div>
                           <div className="h-2 bg-indigo-100 rounded-full overflow-hidden">
                             <div 
                               className="h-full bg-indigo-500 rounded-full transition-all duration-500"
-                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'lab-free').length || 0) / 12 * 100, 100)}%`   }}
+                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'lab-free').length || 0) / 18 * 100, 100)}%`   }}
                             ></div>
                           </div>
                         </div>
@@ -727,13 +720,13 @@ function PointsCalculator() {
                       <div className="space-y-3">
                         <div>
                           <div className="flex justify-between text-sm text-pink-800 mb-1">
-                            <span>Game Badges (10)</span>
-                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'game').length || 0, 10)}/10</span>
+                            <span>Game Badges (12)</span>
+                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'game').length || 0, 12)}/12</span>
                           </div>
                           <div className="h-2 bg-pink-100 rounded-full overflow-hidden">
                             <div 
                               className="h-full bg-pink-500 rounded-full transition-all duration-500"
-                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'game').length || 0) / 10 * 100, 100)}%` }}
+                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'game').length || 0) / 12 * 100, 100)}%` }}
                             ></div>
                           </div>
                         </div>
@@ -751,25 +744,25 @@ function PointsCalculator() {
                         </div>
                         <div>
                           <div className="flex justify-between text-sm text-pink-800 mb-1">
-                            <span>Skill Badges (44)</span>
-                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'skill').length || 0, 44)}/44</span>
+                            <span>Skill Badges (52)</span>
+                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'skill').length || 0, 52)}/52</span>
                           </div>
                           <div className="h-2 bg-pink-100 rounded-full overflow-hidden">
                             <div 
                               className="h-full bg-pink-500 rounded-full transition-all duration-500"
-                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'skill').length || 0) / 44 * 100, 100)}%` }}
+                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'skill').length || 0) / 52 * 100, 100)}%` }}
                             ></div>
                           </div>
                         </div>
                         <div>
                           <div className="flex justify-between text-sm text-pink-800 mb-1">
-                            <span>Lab-free Courses (16)</span>
-                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'lab-free').length || 0, 16)}/16</span>
+                            <span>Lab-free Courses (24)</span>
+                            <span>{Math.min(milestoneBadges?.filter(b => b.type === 'lab-free').length || 0, 24)}/24</span>
                           </div>
                           <div className="h-2 bg-pink-100 rounded-full overflow-hidden">
                             <div 
                               className="h-full bg-pink-500 rounded-full transition-all duration-500"
-                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'lab-free').length || 0) / 16 * 100, 100)}%`   }}
+                              style={{ width: `${Math.min((milestoneBadges?.filter(b => b.type === 'lab-free').length || 0) / 24 * 100, 100)}%`   }}
                             ></div>
                           </div>
                         </div>
@@ -782,7 +775,7 @@ function PointsCalculator() {
                   <p className="text-sm text-gray-600">
                     <strong>Note:</strong> Bonus points are awarded based on your current milestone level only. 
                     For example, reaching Milestone 3 awards 15 bonus points, not the cumulative total of previous milestones.
-                    Only badges earned after April 1st, 2025 count towards milestone progress.
+                    Only badges earned after August 2nd, 2025 count towards milestone progress.
                   </p>
                 </div>
               </div>
