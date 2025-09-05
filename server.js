@@ -255,13 +255,13 @@ function calculatePoints(badges) {
 
 app.get('/api/calculate-points', async (req, res) => {
   try {
-    const { profileUrl } = req.query;
-    console.log('Received profile URL:', profileUrl);
+    const { profileUrl, isFacilitator } = req.query;
+    console.log('Received request with:', { profileUrl, isFacilitator });
 
     if (!profileUrl) {
       return res.status(400).json({
         error: 'Profile URL is required',
-        points: { total: 0, gameBadges: 0, triviaBadges: 0, skillBadges: 0 },
+        points: { total: 0, gameBadges: 0, triviaBadges: 0, skillBadges: 0, milestonePoints: 0 },
         badges: []
       });
     }
@@ -320,13 +320,93 @@ app.get('/api/calculate-points', async (req, res) => {
     const points = calculatePoints(badges);
     console.log('Points calculation:', points);
 
-    const result = {
-      points,
-      badges
-    };
+    // Calculate milestone progress if user is a facilitator
+    if (isFacilitator === 'true') {
+      console.log('Calculating milestone points for facilitator');
+      
+      // Filter badges earned after August 2nd, 2025 for milestone calculation
+      const milestoneBadges = badges.filter(badge => new Date(badge.earnedDate) >= new Date('2025-08-02'));
+      console.log('Milestone badges count:', milestoneBadges.length);
+      
+      // Count badges by type
+      const gameBadgeCount = milestoneBadges.filter(b => b.type === 'game').length;
+      const triviaBadgeCount = milestoneBadges.filter(b => b.type === 'trivia').length;
+      const skillBadgeCount = milestoneBadges.filter(b => b.type === 'skill').length;
+      const labFreeBadgeCount = milestoneBadges.filter(b => b.type === 'lab-free').length;
 
-    console.log('Sending response:', result);
-    res.json(result);
+      console.log('Badge counts:', {
+        game: gameBadgeCount,
+        trivia: triviaBadgeCount,
+        skill: skillBadgeCount,
+        labFree: labFreeBadgeCount
+      });
+
+      // Calculate progress based on milestone requirements
+      let currentMilestone = 0;
+      let progress = 0;
+
+      // Check Milestone 4 (100%) - 12 Arcade Games, 8 Trivia & 52 Skill Badges + Any 24 Lab-free courses
+      if (gameBadgeCount >= 12 && triviaBadgeCount >= 8 && skillBadgeCount >= 52 && labFreeBadgeCount >= 24) {
+        currentMilestone = 4;
+        progress = 100;
+      }
+      // Check Milestone 3 (75%) - 10 Arcade Games, 7 Trivia & 38 Skill Badges + Any 18 Lab-free courses
+      else if (gameBadgeCount >= 10 && triviaBadgeCount >= 7 && skillBadgeCount >= 38 && labFreeBadgeCount >= 18) {
+        currentMilestone = 3;
+        progress = 75;
+      }
+      // Check Milestone 2 (50%) - 8 Arcade Games, 6 Trivia & 28 Skill Badges + Any 12 Lab-free courses
+      else if (gameBadgeCount >= 8 && triviaBadgeCount >= 6 && skillBadgeCount >= 28 && labFreeBadgeCount >= 12) {
+        currentMilestone = 2;
+        progress = 50;
+      }
+      // Check Milestone 1 (25%) - 6 Arcade Games, 5 Trivia & 14 Skill Badges + Any 6 Lab-free courses
+      else if (gameBadgeCount >= 6 && triviaBadgeCount >= 5 && skillBadgeCount >= 14 && labFreeBadgeCount >= 6) {
+        currentMilestone = 1;
+        progress = 25;
+      }
+
+      console.log('Milestone progress:', { currentMilestone, progress });
+
+      // Calculate milestone points
+      const MILESTONE_POINTS = { 1: 2, 2: 8, 3: 15, 4: 25 };
+      const milestonePoints = MILESTONE_POINTS[currentMilestone] || 0;
+      console.log('Calculated milestone points:', milestonePoints);
+      
+      // Update points with milestone points
+      points.milestonePoints = milestonePoints;
+      points.total = points.gameBadges + points.triviaBadges + points.skillBadges + milestonePoints;
+
+      console.log('Final points with milestone:', points);
+
+      const result = {
+        points,
+        badges,
+        milestoneProgress: {
+          currentMilestone,
+          progress
+        }
+      };
+
+      console.log('Sending response:', result);
+      res.json(result);
+    } else {
+      console.log('User is not a facilitator, resetting milestone points');
+      // Reset milestone points when not a facilitator
+      points.milestonePoints = 0;
+      points.total = points.gameBadges + points.triviaBadges + points.skillBadges;
+
+      console.log('Final points without milestone:', points);
+
+      const result = {
+        points,
+        badges,
+        milestoneProgress: undefined
+      };
+
+      console.log('Sending response:', result);
+      res.json(result);
+    }
   } catch (error) {
     console.error('Error scraping profile:', error);
     console.error('Error details:', {
@@ -338,7 +418,7 @@ app.get('/api/calculate-points', async (req, res) => {
     res.status(500).json({
       error: 'Failed to scrape profile data',
       details: error.message,
-      points: { total: 0, gameBadges: 0, triviaBadges: 0, skillBadges: 0 },
+      points: { total: 0, gameBadges: 0, triviaBadges: 0, skillBadges: 0, milestonePoints: 0 },
       badges: []
     });
   }
