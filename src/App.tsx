@@ -52,7 +52,7 @@ interface ScrapedData {
   }
 }
 
-const API_URL = 'http://139.59.38.179:3001'
+const API_URL = 'https://139.59.38.179'
 
 function PointsCalculator() {
   const [profileUrl, setProfileUrl] = useState('')
