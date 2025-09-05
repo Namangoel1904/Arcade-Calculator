@@ -52,7 +52,7 @@ interface ScrapedData {
   }
 }
 
-const API_URL = 'https://your-droplet-ip:3001'  // Replace with your actual droplet IP
+const API_URL = 'http://139.59.38.179:3001'
 
 function PointsCalculator() {
   const [profileUrl, setProfileUrl] = useState('')
