@@ -52,7 +52,7 @@ interface ScrapedData {
   }
 }
 
-const API_URL = 'https://arcade-calculator-backend.onrender.com'
+const API_URL = 'https://api.139-59-38-179.sslip.io'
 
 function PointsCalculator() {
   const [profileUrl, setProfileUrl] = useState('')
